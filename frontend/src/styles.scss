@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+:root {
+    --header--background--color: rgba(35, 37, 43, 1);
+    --header--color: rgba(255, 255, 255, 0.8);
+
+    --standard--font--size: 1.4rem;
+    --standard--transition--duration: 0.3s;
+}

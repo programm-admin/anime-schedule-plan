@@ -1,6 +1,6 @@
 # anime-schedule-plan
 
-![Logo](logo.svg)
+![Logo](/frontend/public/logo.svg)
 
 A project for managing animes and their schedule of release or the own watching schedule.
 
