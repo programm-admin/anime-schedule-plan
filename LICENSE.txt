@@ -13,3 +13,20 @@ Zuwiderhandlungen werden zivil- und ggf. strafrechtlich verfolgt.
 Kontakt für Nutzungsanfragen:
 Hannes Keller
 
+
+English version below --------------------------------------------------------------------------------------------------------------------------
+
+Copyright (c) 2025 Hannes Keller
+
+All rights reserved.
+
+This software is subject to copyright protection. Any use, duplication, distribution, processing, publication or other use of this software - in whole or in part - is prohibited without the express written consent of the copyright holder.
+
+Any use - whether private, commercial or in the context of research and teaching - requires the prior written consent of the copyright holder.
+
+If permission is granted, the author must be named clearly and appropriately.
+
+Infringements will be prosecuted under civil and possibly criminal law.
+
+Contact for usage requests:
+Hannes Keller
