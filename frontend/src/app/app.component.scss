@@ -9,8 +9,11 @@
     background-color: var(--header--background--color);
 
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
+
+    padding-left: var(--standard--padding--left-right);
+    padding-right: var(--standard--padding--left-right);
 }
 
 .appHeader img {

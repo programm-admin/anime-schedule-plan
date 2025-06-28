@@ -1,4 +1,4 @@
-<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+<svg width="250" height="120" xmlns="http://www.w3.org/2000/svg">
   <style>
     line { stroke-width: 16; }
     circle { stroke: rgba(241, 11, 126, 0.9); stroke-width: 16; }
