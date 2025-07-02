@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import userRoutes from "./routes/user.route";
+import movieRoutes from "./routes/movie.route";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/user", userRoutes);
+app.use("/api/movie", movieRoutes);
 
 // DB & Server Start
 connectDB().then(() => {

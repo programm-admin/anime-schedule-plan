@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import generateUniqueId from "generate-unique-id";
-import { UNIQUE_ID_OBJECT } from "../shared/types-and-variables/unique-id-object";
+import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
@@ -13,14 +13,20 @@ const hashPassword = (password: string): Promise<string> => {
     return bcrypt.hash(password, SALT_ROUNDS);
 };
 
+/**
+ * Function for register a new user and add him to the database.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
 export const registerUser = async (request: Request, response: Response) => {
     const { userName, password } = request.body;
 
     try {
         const existingUser = await User.find({ userName: userName });
-        console.log("existing user:", JSON.stringify(existingUser));
 
-        if (existingUser.length > 1) {
+        if (existingUser.length > 0) {
+            console.log("bla in existing");
             response.status(400).json({ message: "Username already exists." });
             return;
         }
@@ -30,7 +36,9 @@ export const registerUser = async (request: Request, response: Response) => {
         const newUser = new User({
             userName,
             password: passwordHash,
-            accountId: generateUniqueId(UNIQUE_ID_OBJECT),
+            accountId: `${generateUniqueId(
+                UNIQUE_ID_OBJECT
+            )}-${generateUniqueId(UNIQUE_ID_OBJECT)}`,
             createdAccount: today,
             lastLogin: today,
         });
@@ -48,6 +56,12 @@ export const registerUser = async (request: Request, response: Response) => {
     }
 };
 
+/**
+ * Function for log in an existing user by comparing the request data with the database information.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
 export const loginUser = async (request: Request, response: Response) => {
     const { userName, password } = request.body;
 
