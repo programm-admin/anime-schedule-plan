@@ -18,7 +18,7 @@ export const createTV = async (request: Request, response: Response) => {
         const newTV = new TVModel({
             id: generateId(false),
             title: tv.title,
-            seasons: tv.seasons,
+            seasonIds: [],
         });
 
         await newTV.save();
@@ -41,7 +41,7 @@ export const updateTV = async (request: Request, response: Response) => {
             {
                 $set: {
                     title: tv.title,
-                    seasons: tv.seasons,
+                    seasonIds: tv.seasonIds,
                 },
             }
         );
@@ -59,33 +59,3 @@ export const updateTV = async (request: Request, response: Response) => {
         response.status(500).json({ message: "Error when updating tv." });
     }
 };
-
-/**
- * await CarModel.updateOne(
-  { id: carId, "wheels.id": wheelId },
-  {
-    $set: {
-      "wheels.$.position": newPositionArray
-    }
-  }
-);
-
-
-
-
-await CarModel.updateOne(
-  { id: carId },
-  {
-    $set: {
-      "wheels.$[wheelElem].position.$[posElem].isLeft": true
-    }
-  },
-  {
-    arrayFilters: [
-      { "wheelElem.id": wheelId },
-      { "posElem.isFront": true, "posElem.isLeft": false }
-    ]
-  }
-);
-
- */
