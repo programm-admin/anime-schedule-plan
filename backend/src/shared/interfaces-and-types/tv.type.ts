@@ -1,5 +1,6 @@
 export type T_DBTVSeasonEpisode = {
     episodeId: string;
+    episodeUserAccountId: string;
     episodeTitle: string;
     episodeDescription: string;
     episodeNotes: string;
@@ -9,10 +10,12 @@ export type T_DBTVSeasonEpisode = {
     episodeWatched: boolean;
     episodeRating: number;
     episodeSeasonId: string;
+    episodeNumber: number;
 };
 
 export type T_DBTVSeason = {
     seasonId: string;
+    seasonUserAccountId: string;
     seasonTitle: string;
     seasonNumber: number;
     seasonDescription: string;
@@ -25,6 +28,9 @@ export type T_DBTVSeason = {
 
 export type T_DBTV = {
     id: string;
+    userAccountId: string;
     title: string;
     seasonIds: string[];
+    description: string,
+    notes: string
 };

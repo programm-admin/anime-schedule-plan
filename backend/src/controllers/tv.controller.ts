@@ -4,11 +4,22 @@ import { TVModel } from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 import { error } from "console";
 
+/**
+ * Function for creating new TV object in DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
 export const createTV = async (request: Request, response: Response) => {
     const { token, tv }: { token: string; tv: T_DBTV } = request.body;
 
     try {
-        const foundTVList: T_DBTV[] = await TVModel.find({ title: tv.title });
+        const foundTVList: T_DBTV[] = await TVModel.find({
+            title: tv.title,
+            userAccountId: tv.userAccountId,
+            description: tv.description,
+            notes: tv.notes,
+        });
 
         if (foundTVList.length > 0) {
             response.status(400).json({ message: "TV already exists." });
@@ -17,8 +28,9 @@ export const createTV = async (request: Request, response: Response) => {
 
         const newTV = new TVModel({
             id: generateId(false),
+            userAccountId: tv.userAccountId,
             title: tv.title,
-            seasonIds: [],
+            seasonIds: tv.seasonIds,
         });
 
         await newTV.save();
@@ -32,16 +44,24 @@ export const createTV = async (request: Request, response: Response) => {
     }
 };
 
+/**
+ * Function for updating an existing TV object in DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
 export const updateTV = async (request: Request, response: Response) => {
     const { token, tv }: { token: string; tv: T_DBTV } = request.body;
 
     try {
         const updatedTV = await TVModel.updateOne(
-            { id: tv.id },
+            { id: tv.id, userAccountId: tv.userAccountId },
             {
                 $set: {
                     title: tv.title,
                     seasonIds: tv.seasonIds,
+                    description: tv.description,
+                    notes: tv.notes,
                 },
             }
         );
