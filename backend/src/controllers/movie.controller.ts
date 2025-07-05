@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Movie from "../models/media/movie.model";
+import { MovieModel } from "../models/media/movie.model";
 import { T_DBMovie } from "../shared/interfaces-and-types/movie.type";
 import { generateId } from "../shared/functions/generate-id";
 
@@ -7,7 +7,7 @@ export const createNewMovie = async (request: Request, response: Response) => {
     const { token, movie }: { token: string; movie: T_DBMovie } = request.body;
 
     try {
-        const foundMovies: T_DBMovie[] = await Movie.find({
+        const foundMovies: T_DBMovie[] = await MovieModel.find({
             title: movie.title,
         });
 
@@ -16,8 +16,8 @@ export const createNewMovie = async (request: Request, response: Response) => {
             return;
         }
 
-        const newMovie = new Movie({
-            id: generateId(true),
+        const newMovie = new MovieModel({
+            id: generateId("Movie"),
             title: movie.title,
             description: movie.description,
             plannedAirDate: movie.plannedAirDate,
@@ -42,19 +42,20 @@ export const updateMovie = async (request: Request, response: Response) => {
     const { token, movie }: { token: string; movie: T_DBMovie } = request.body;
 
     try {
-        const updatedMovie: T_DBMovie | null = await Movie.findByIdAndUpdate(
-            movie._id,
-            {
-                title: movie.title,
-                description: movie.description,
-                plannedAirDate: movie.plannedAirDate,
-                realAirDate: movie.realAirDate,
-                watched: movie.watched,
-                rating: movie.rating,
-                notes: movie.notes,
-            },
-            { new: true }
-        );
+        const updatedMovie: T_DBMovie | null =
+            await MovieModel.findByIdAndUpdate(
+                movie._id,
+                {
+                    title: movie.title,
+                    description: movie.description,
+                    plannedAirDate: movie.plannedAirDate,
+                    realAirDate: movie.realAirDate,
+                    watched: movie.watched,
+                    rating: movie.rating,
+                    notes: movie.notes,
+                },
+                { new: true }
+            );
 
         if (!updateMovie) {
             response
@@ -70,5 +71,33 @@ export const updateMovie = async (request: Request, response: Response) => {
     } catch (error) {
         console.log("error when updating movie", error);
         response.status(500).json({ message: "Error when updating movie." });
+    }
+};
+
+/**
+ * Function for deleting a single movie object from the DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
+export const deleteMovie = async (request: Request, response: Response) => {
+    const { token, movie }: { token: string; movie: T_DBMovie } = request.body;
+
+    try {
+        // delete movie
+        const deletedMovie = await MovieModel.deleteOne({
+            id: movie.id,
+            userAccountId: movie.userAccountId,
+        });
+
+        if (!deletedMovie) {
+            response.status(400).json({ message: "Could not delete TV." });
+            return;
+        }
+
+        response.status(200).json({ message: "Deleted movie successfully." });
+    } catch (error) {
+        console.error("error when deleting tv:", error);
+        response.status(500).json({ message: "Error when deleting TV." });
     }
 };

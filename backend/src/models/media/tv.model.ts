@@ -1,32 +1,53 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
+import {
+    T_DBTV,
+    T_DBTVSeason,
+    T_DBTVSeasonEpisode,
+} from "../../shared/interfaces-and-types/tv.type";
 
-const TVSeasonEpisodeSchema = new mongoose.Schema({
-    episodeId: { type: String, required: true, unique: true },
-    episodeTitle: { type: String, required: false },
-    episodeDescription: { type: String, required: false },
-    episodeNotes: { type: String, required: false },
-    episodePlannedAirDate: { type: Date, required: true },
-    episodeRealAirDate: { type: Date, required: true },
-    episodeIsNormalEpisode: { type: Boolean, required: true },
-    episodeWatched: { type: Boolean, required: true },
-    episodeRating: { type: Number, required: false },
-});
+export type T_MONGO_DBTVSeasonEpisode = T_DBTVSeasonEpisode & Document;
 
-const TVSeasonSchema = new mongoose.Schema({
+const TVSeasonEpisodeSchema: Schema<T_MONGO_DBTVSeasonEpisode> =
+    new mongoose.Schema({
+        episodeId: { type: String, required: true, unique: true },
+        episodeUserAccountId: { type: String, required: true },
+        episodeTitle: { type: String, required: false },
+        episodeDescription: { type: String, required: false },
+        episodeNotes: { type: String, required: false },
+        episodePlannedAirDate: { type: Date, required: true },
+        episodeRealAirDate: { type: Date, required: true },
+        episodeIsNormalEpisode: { type: Boolean, required: true },
+        episodeWatched: { type: Boolean, required: true },
+        episodeRating: { type: Number, required: false },
+        episodeSeasonId: { type: String, required: true },
+        episodeTVId: { type: String, required: true },
+        episodeNumber: { type: Number, required: true },
+    });
+
+export type T_MONGO_DBTVSeason = T_DBTVSeason & Document;
+
+const TVSeasonSchema: Schema<T_MONGO_DBTVSeason> = new mongoose.Schema({
     seasonId: { type: String, required: true, unique: true },
+    seasonUserAccountId: { type: String, required: true },
     seasonTitle: { type: String, required: true },
     seasonNumber: { type: Number, required: true },
     seasonDescription: { type: String, required: false },
     seasonNumberOfEpisodes: { type: Number, required: true },
     seasonWatched: { type: Boolean, required: true },
     seasonRating: { type: Number, required: false },
-    seasonEpisodes: { type: [TVSeasonEpisodeSchema], required: true },
+    seasonTVId: { type: String, required: true },
 });
 
-const TVSchema = new mongoose.Schema({
+export type T_MONGO_DBTV = T_DBTV & Document;
+
+const TVSchema: Schema<T_MONGO_DBTV> = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
+    userAccountId: { type: String, required: true },
     title: { type: String, required: true },
-    seasons: { type: [TVSeasonSchema], required: true },
+    description: { type: String, required: false },
+    notes: { type: String, required: false },
+    watched: { type: Boolean, required: true },
+    numberOfSeasons: { type: Number, required: true },
 });
 
 export const TVModel = mongoose.model("TV", TVSchema);

@@ -1,14 +1,29 @@
 import { Request, Response } from "express";
-import { T_DBTV } from "../shared/interfaces-and-types/tv.type";
-import { TVModel } from "../models/media/tv.model";
+import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
+import {
+    TVModel,
+    TVSeasonEpisodeModel,
+    TVSeasonModel,
+} from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 import { error } from "console";
 
+/**
+ * Function for creating new TV object in DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
 export const createTV = async (request: Request, response: Response) => {
     const { token, tv }: { token: string; tv: T_DBTV } = request.body;
 
     try {
-        const foundTVList: T_DBTV[] = await TVModel.find({ title: tv.title });
+        const foundTVList: T_DBTV[] = await TVModel.find({
+            title: tv.title,
+            userAccountId: tv.userAccountId,
+            description: tv.description,
+            notes: tv.notes,
+        });
 
         if (foundTVList.length > 0) {
             response.status(400).json({ message: "TV already exists." });
@@ -16,9 +31,12 @@ export const createTV = async (request: Request, response: Response) => {
         }
 
         const newTV = new TVModel({
-            id: generateId(false),
+            id: generateId("TV"),
+            userAccountId: tv.userAccountId,
             title: tv.title,
-            seasons: tv.seasons,
+            notes: tv.notes,
+            watched: false,
+            numberOfSeasons: 0,
         });
 
         await newTV.save();
@@ -32,16 +50,23 @@ export const createTV = async (request: Request, response: Response) => {
     }
 };
 
+/**
+ * Function for updating an existing TV object in DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
 export const updateTV = async (request: Request, response: Response) => {
     const { token, tv }: { token: string; tv: T_DBTV } = request.body;
 
     try {
         const updatedTV = await TVModel.updateOne(
-            { id: tv.id },
+            { id: tv.id, userAccountId: tv.userAccountId },
             {
                 $set: {
                     title: tv.title,
-                    seasons: tv.seasons,
+                    description: tv.description,
+                    notes: tv.notes,
                 },
             }
         );
@@ -61,31 +86,58 @@ export const updateTV = async (request: Request, response: Response) => {
 };
 
 /**
- * await CarModel.updateOne(
-  { id: carId, "wheels.id": wheelId },
-  {
-    $set: {
-      "wheels.$.position": newPositionArray
-    }
-  }
-);
-
-
-
-
-await CarModel.updateOne(
-  { id: carId },
-  {
-    $set: {
-      "wheels.$[wheelElem].position.$[posElem].isLeft": true
-    }
-  },
-  {
-    arrayFilters: [
-      { "wheelElem.id": wheelId },
-      { "posElem.isFront": true, "posElem.isLeft": false }
-    ]
-  }
-);
-
+ * Function for deleting an existing tv object and its season and episode objects from the DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
  */
+
+export const deleteTV = async (request: Request, response: Response) => {
+    const { token, tv }: { token: string; tv: T_DBTV } = request.body;
+
+    try {
+        // delete tv
+        const deletedTV = await TVModel.deleteOne({
+            id: tv.id,
+            userAccountId: tv.userAccountId,
+        });
+
+        if (!deletedTV) {
+            response.status(400).json({ message: "Could not delete TV." });
+            return;
+        }
+
+        // delete all seasons of the tv
+        const deletedTVSeasons = await TVSeasonModel.deleteMany({
+            seasonUserAccountId: tv.userAccountId,
+            seasonTVId: tv.id,
+        });
+
+        if (!deletedTVSeasons) {
+            response
+                .status(400)
+                .json({ message: "Could not delete seasons of TV." });
+            return;
+        }
+
+        // delete all episodes of the tv
+        const deletedTVSeasonEpisodes = await TVSeasonEpisodeModel.deleteMany({
+            episodeUserAccountId: tv.userAccountId,
+            episodeTVId: tv.id,
+        });
+
+        if (!deletedTVSeasonEpisodes) {
+            response
+                .status(400)
+                .json({ message: "Could not delete episodes of TV." });
+            return;
+        }
+
+        response.status(200).json({
+            message: "Deleted TV, its seasons and its episodes successfully.",
+        });
+    } catch (error) {
+        console.error("error when deleting tv:", error);
+        response.status(500).json({ message: "Error when deleting TV." });
+    }
+};
