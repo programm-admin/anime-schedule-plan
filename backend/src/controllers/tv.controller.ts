@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
-import { TVModel, TVSeasonModel } from "../models/media/tv.model";
+import {
+    TVModel,
+    TVSeasonEpisodeModel,
+    TVSeasonModel,
+} from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 import { error } from "console";
 
@@ -78,5 +82,62 @@ export const updateTV = async (request: Request, response: Response) => {
     } catch (eror) {
         console.log("error when updating tv", error);
         response.status(500).json({ message: "Error when updating tv." });
+    }
+};
+
+/**
+ * Function for deleting an existing tv object and its season and episode objects from the DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
+
+export const deleteTV = async (request: Request, response: Response) => {
+    const { token, tv }: { token: string; tv: T_DBTV } = request.body;
+
+    try {
+        // delete tv
+        const deletedTV = await TVModel.deleteOne({
+            id: tv.id,
+            userAccountId: tv.userAccountId,
+        });
+
+        if (!deletedTV) {
+            response.status(400).json({ message: "Could not delete TV." });
+            return;
+        }
+
+        // delete all seasons of the tv
+        const deletedTVSeasons = await TVSeasonModel.deleteMany({
+            seasonUserAccountId: tv.userAccountId,
+            seasonTVId: tv.id,
+        });
+
+        if (!deletedTVSeasons) {
+            response
+                .status(400)
+                .json({ message: "Could not delete seasons of TV." });
+            return;
+        }
+
+        // delete all episodes of the tv
+        const deletedTVSeasonEpisodes = await TVSeasonEpisodeModel.deleteMany({
+            episodeUserAccountId: tv.userAccountId,
+            episodeTVId: tv.id,
+        });
+
+        if (!deletedTVSeasonEpisodes) {
+            response
+                .status(400)
+                .json({ message: "Could not delete episodes of TV." });
+            return;
+        }
+
+        response.status(200).json({
+            message: "Deleted TV, its seasons and its episodes successfully.",
+        });
+    } catch (error) {
+        console.error("error when deleting tv:", error);
+        response.status(500).json({ message: "Error when deleting TV." });
     }
 };

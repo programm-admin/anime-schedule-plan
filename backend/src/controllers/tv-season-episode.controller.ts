@@ -9,6 +9,7 @@ import {
     TVSeasonModel,
 } from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
+import { revalidateTVAndSeason } from "../shared/functions/revalidate-watched-status";
 
 const updateTVSeasonByEpisode = async (
     tvSeasonEpisode: T_DBTVSeasonEpisode,
@@ -207,51 +208,18 @@ export const updateTVSeasonEpisode = async (
         }
 
         // update TV season for this episode
-        const updatedSeasonSuccessfully: boolean =
-            await updateTVSeasonByEpisode(tvSeasonEpisode, response);
+        const updatedTVAndSeasonSuccessfully: boolean =
+            await revalidateTVAndSeason(
+                tvSeasonEpisode.episodeTVId,
+                tvSeasonEpisode.episodeSeasonId,
+                tvSeasonEpisode.episodeUserAccountId,
+                true
+            );
 
-        if (!updatedSeasonSuccessfully) {
+        if (!updatedTVAndSeasonSuccessfully) {
             response.status(400).json({
                 message:
-                    "Error when updating season because of updating episode.",
-            });
-            return;
-        }
-
-        // update tv
-        const allTVSeasonsList: T_DBTVSeason[] = await TVSeasonModel.find({
-            seasonUserAccountId: tvSeasonEpisode.episodeUserAccountId,
-            seasonTVId: tvSeasonEpisode.episodeTVId,
-        });
-
-        if (allTVSeasonsList.length < 1) {
-            response.status(400).json({
-                message:
-                    "Error when updating TV because no seasons were found.",
-            });
-            return;
-        }
-
-        const areAllSeasonsWatched: boolean =
-            allTVSeasonsList
-                .map((season: T_DBTVSeason) => season.seasonWatched)
-                .filter((isWatched: boolean) => !isWatched).length < 1;
-        const updatedTV = await TVModel.updateOne(
-            {
-                userAccountId: tvSeasonEpisode.episodeUserAccountId,
-                id: tvSeasonEpisode.episodeTVId,
-            },
-            {
-                $set: {
-                    watched: areAllSeasonsWatched,
-                },
-            }
-        );
-
-        if (!updatedTV) {
-            response.status(400).json({
-                message:
-                    "Error when updating TV because no TV was found due to updating episode.",
+                    "Error when revalidating TV and season because of episode update.",
             });
             return;
         }
@@ -265,5 +233,57 @@ export const updateTVSeasonEpisode = async (
         response
             .status(500)
             .json({ message: "Error when updating TV season episode." });
+    }
+};
+
+/**
+ * Function for deleting a single episode object from the DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
+export const deleteTVSeasonEpisode = async (
+    request: Request,
+    response: Response
+) => {
+    const {
+        token,
+        tvSeasonEpisode,
+    }: { token: string; tvSeasonEpisode: T_DBTVSeasonEpisode } = request.body;
+
+    try {
+        const deletedEpisode = await TVSeasonEpisodeModel.deleteOne({
+            episodeId: tvSeasonEpisode.episodeId,
+            episodeUserAccountId: tvSeasonEpisode.episodeUserAccountId,
+        });
+
+        if (!deletedEpisode) {
+            response.status(400).json({ message: "Could not delete episode." });
+            return;
+        }
+
+        // update TV season for this episode
+        const updatedTVAndSeasonSuccessfully: boolean =
+            await revalidateTVAndSeason(
+                tvSeasonEpisode.episodeTVId,
+                tvSeasonEpisode.episodeSeasonId,
+                tvSeasonEpisode.episodeUserAccountId,
+                true
+            );
+
+        if (!updatedTVAndSeasonSuccessfully) {
+            response.status(400).json({
+                message:
+                    "Error when revalidating TV and season because of episode update.",
+            });
+            return;
+        }
+
+        response.status(200).json({ message: "Deleted episode successfully." });
+    } catch (error) {
+        console.error("error when deleting an episode:", error);
+        response
+            .status(500)
+            .json({ message: "Error when deleting the episode." });
     }
 };

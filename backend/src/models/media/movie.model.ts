@@ -1,7 +1,11 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose, { Document, mongo, Schema } from "mongoose";
+import { T_DBMovie } from "../../shared/interfaces-and-types/movie.type";
 
-const MovieSchema = new mongoose.Schema({
+export type T_MONGO_DBMovie = T_DBMovie & Document;
+
+const MovieSchema: Schema<T_MONGO_DBMovie> = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
+    userAccountId: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: false },
     plannedAirDate: { type: Date, required: true },
@@ -11,4 +15,4 @@ const MovieSchema = new mongoose.Schema({
     notes: { type: String, required: false },
 });
 
-export default mongoose.model("Movie", MovieSchema);
+export const MovieModel = mongoose.model("Movie", MovieSchema);

@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
-import { TVModel, TVSeasonModel } from "../models/media/tv.model";
+import {
+    TVModel,
+    TVSeasonEpisodeModel,
+    TVSeasonModel,
+} from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
+import { revalidateTVAndSeason } from "../shared/functions/revalidate-watched-status";
 
 /**
  * Function for creating a new tv season object in the DB.
@@ -153,5 +158,65 @@ export const updateTVSeason = async (request: Request, response: Response) => {
         response
             .status(500)
             .json({ message: "Error when updating TV season." });
+    }
+};
+
+/**
+ * Function for deleting a TV season and its episodes from the DB.
+ * @param request express.Request
+ * @param response express.Response
+ * @returns void
+ */
+export const deleteTVSeason = async (request: Request, response: Response) => {
+    const { token, tvSeason }: { token: string; tvSeason: T_DBTVSeason } =
+        request.body;
+
+    try {
+        // delete season
+        const deletedSeason = await TVSeasonModel.deleteOne({
+            seasonUserAccountId: tvSeason.seasonUserAccountId,
+            seasonId: tvSeason.seasonId,
+        });
+
+        if (!deletedSeason) {
+            response.status(400).json({ message: "Could not delete season." });
+            return;
+        }
+
+        // delete episodes of season
+        const deletedSeasonEpisodes = await TVSeasonEpisodeModel.deleteMany({
+            episodeUserAccountId: tvSeason.seasonUserAccountId,
+            episodeSeasonId: tvSeason.seasonId,
+        });
+
+        if (!deletedSeasonEpisodes) {
+            response
+                .status(400)
+                .json({ message: "Could not delete episodes of season." });
+            return;
+        }
+
+        const updatedTVSuccessfully: boolean = await revalidateTVAndSeason(
+            tvSeason.seasonTVId,
+            tvSeason.seasonId,
+            tvSeason.seasonUserAccountId,
+            false
+        );
+
+        if (!updatedTVSuccessfully) {
+            response
+                .status(400)
+                .json({ message: "Error when revalidating TV." });
+            return;
+        }
+
+        response
+            .status(200)
+            .json({ message: "Deleted season and its episodes successfully." });
+    } catch (error) {
+        console.error("error when deleting a season:", error);
+        response
+            .status(500)
+            .json({ message: "Error when deleting the season." });
     }
 };
