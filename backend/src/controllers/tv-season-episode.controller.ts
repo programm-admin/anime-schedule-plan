@@ -1,8 +1,58 @@
 import { Request, Response } from "express";
-import { T_DBTVSeasonEpisode } from "../shared/interfaces-and-types/tv.type";
-import { TVSeasonEpisodeModel } from "../models/media/tv.model";
-import generateUniqueId from "generate-unique-id";
-import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
+import {
+    T_DBTVSeason,
+    T_DBTVSeasonEpisode,
+} from "../shared/interfaces-and-types/tv.type";
+import {
+    TVModel,
+    TVSeasonEpisodeModel,
+    TVSeasonModel,
+} from "../models/media/tv.model";
+import { generateId } from "../shared/functions/generate-id";
+
+const updateTVSeasonByEpisode = async (
+    tvSeasonEpisode: T_DBTVSeasonEpisode,
+    response: Response
+): Promise<boolean> => {
+    // update TV season for this episode
+    const allEpisodesOfSeasonList: T_DBTVSeasonEpisode[] =
+        await TVSeasonEpisodeModel.find({
+            episodeUserAccountId: tvSeasonEpisode.episodeUserAccountId,
+            episodeSeasonId: tvSeasonEpisode.episodeSeasonId,
+        });
+
+    if (allEpisodesOfSeasonList.length < 1) {
+        response.status(400).json({ message: "No season episodes found." });
+        return false;
+    }
+
+    const areAllEpisodesWatched: boolean =
+        allEpisodesOfSeasonList
+            .map((episode: T_DBTVSeasonEpisode) => episode.episodeWatched)
+            .filter((episodeWatched: boolean) => !episodeWatched).length < 1;
+
+    const updatedTVSeason = await TVSeasonModel.updateOne(
+        {
+            seasonId: tvSeasonEpisode.episodeSeasonId,
+            seasonUserAccountId: tvSeasonEpisode.episodeUserAccountId,
+        },
+        {
+            $set: {
+                seasonNumberOfEpisodes: allEpisodesOfSeasonList.length,
+                seasonWatched: areAllEpisodesWatched,
+            },
+        }
+    );
+
+    if (!updatedTVSeason) {
+        response.status(400).json({
+            message: "Error when updating TV season because of episode udpate.",
+        });
+        return false;
+    }
+
+    return true;
+};
 
 /**
  * Function for creating a new TV season episode object in DB.
@@ -33,7 +83,7 @@ export const createTVSeasonEpisode = async (
         }
 
         const newTVSeasonEpisode = new TVSeasonEpisodeModel({
-            episodeId: generateUniqueId(UNIQUE_ID_OBJECT),
+            episodeId: generateId("TVSeasonEpisode"),
             episodeUserAccountId: tvSeasonEpisode.episodeUserAccountId,
             episodeTitle: tvSeasonEpisode.episodeTitle,
             episodeDescription: tvSeasonEpisode.episodeDescription,
@@ -44,10 +94,61 @@ export const createTVSeasonEpisode = async (
             episodeWatched: tvSeasonEpisode.episodeWatched,
             episodeRating: tvSeasonEpisode.episodeRating,
             episodeSeasonId: tvSeasonEpisode.episodeSeasonId,
+            episodeTVId: tvSeasonEpisode.episodeTVId,
             episodeNumber: tvSeasonEpisode.episodeNumber,
         });
 
         await newTVSeasonEpisode.save();
+
+        // update TV season for this episode
+        const updatedSeasonSuccessfully: boolean =
+            await updateTVSeasonByEpisode(tvSeasonEpisode, response);
+
+        if (!updatedSeasonSuccessfully) {
+            response.status(400).json({
+                message:
+                    "Error when updating season because of updating episode.",
+            });
+            return;
+        }
+
+        const allTVSeasonsList: T_DBTVSeason[] = await TVSeasonModel.find({
+            seasonUserAccountId: tvSeasonEpisode.episodeUserAccountId,
+            seasonTVId: tvSeasonEpisode.episodeTVId,
+        });
+
+        if (allTVSeasonsList.length < 1) {
+            response.status(400).json({
+                message:
+                    "Error when updating TV because no seasons were found.",
+            });
+            return;
+        }
+
+        const areAllSeasonsWatched: boolean =
+            allTVSeasonsList
+                .map((season: T_DBTVSeason) => season.seasonWatched)
+                .filter((isWatched: boolean) => !isWatched).length < 1;
+        const updatedTV = await TVModel.updateOne(
+            {
+                userAccountId: tvSeasonEpisode.episodeUserAccountId,
+                id: tvSeasonEpisode.episodeTVId,
+            },
+            {
+                $set: {
+                    watched: areAllSeasonsWatched,
+                },
+            }
+        );
+
+        if (!updatedTV) {
+            response.status(400).json({
+                message:
+                    "Error when updating TV because no TV was found due to updating episode.",
+            });
+            return;
+        }
+
         response.status(201).json({
             message: "Created new TV season episode successfully.",
             episode: newTVSeasonEpisode,
@@ -81,6 +182,7 @@ export const updateTVSeasonEpisode = async (
                 episodeId: tvSeasonEpisode.episodeId,
                 episodeUserAccountId: tvSeasonEpisode.episodeUserAccountId,
                 episodeSeasonId: tvSeasonEpisode.episodeSeasonId,
+                episodeTVId: tvSeasonEpisode.episodeTVId,
             },
             {
                 $set: {
@@ -101,6 +203,56 @@ export const updateTVSeasonEpisode = async (
 
         if (!updateTVSeasonEpisode) {
             response.status(400).json({ message: "No episode found." });
+            return;
+        }
+
+        // update TV season for this episode
+        const updatedSeasonSuccessfully: boolean =
+            await updateTVSeasonByEpisode(tvSeasonEpisode, response);
+
+        if (!updatedSeasonSuccessfully) {
+            response.status(400).json({
+                message:
+                    "Error when updating season because of updating episode.",
+            });
+            return;
+        }
+
+        // update tv
+        const allTVSeasonsList: T_DBTVSeason[] = await TVSeasonModel.find({
+            seasonUserAccountId: tvSeasonEpisode.episodeUserAccountId,
+            seasonTVId: tvSeasonEpisode.episodeTVId,
+        });
+
+        if (allTVSeasonsList.length < 1) {
+            response.status(400).json({
+                message:
+                    "Error when updating TV because no seasons were found.",
+            });
+            return;
+        }
+
+        const areAllSeasonsWatched: boolean =
+            allTVSeasonsList
+                .map((season: T_DBTVSeason) => season.seasonWatched)
+                .filter((isWatched: boolean) => !isWatched).length < 1;
+        const updatedTV = await TVModel.updateOne(
+            {
+                userAccountId: tvSeasonEpisode.episodeUserAccountId,
+                id: tvSeasonEpisode.episodeTVId,
+            },
+            {
+                $set: {
+                    watched: areAllSeasonsWatched,
+                },
+            }
+        );
+
+        if (!updatedTV) {
+            response.status(400).json({
+                message:
+                    "Error when updating TV because no TV was found due to updating episode.",
+            });
             return;
         }
 

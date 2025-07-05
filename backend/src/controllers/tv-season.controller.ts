@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
-import { TVSeasonModel } from "../models/media/tv.model";
+import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
+import { TVModel, TVSeasonModel } from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 
 /**
@@ -26,25 +26,48 @@ export const createTVSeason = async (request: Request, response: Response) => {
         }
 
         const newTVSeason = new TVSeasonModel({
-            seasonId: generateId(false),
+            seasonId: generateId("TVSeason"),
             seasonUserAccountId: tvSeason.seasonUserAccountId,
             seasonTitle: tvSeason.seasonTitle,
             seasonNumber: tvSeason.seasonNumber,
             seasonDescription: tvSeason.seasonDescription,
-            seasonNumberOfEpisodes: tvSeason.seasonNumberOfEpisodes,
-            seasonWatched: tvSeason.seasonWatched,
+            seasonNumberOfEpisodes: 0,
+            seasonWatched: false,
             seasonRating: tvSeason.seasonRating,
-            seasonEpisodeIds: tvSeason.seasonEpisodeIds,
             seasonTVId: tvSeason.seasonTVId,
         });
 
         await newTVSeason.save();
+
+        // updating tv watched attribut
+        const updatedTV = await TVModel.updateOne(
+            {
+                id: tvSeason.seasonTVId,
+                userAccountId: tvSeason.seasonUserAccountId,
+            },
+            {
+                $set: {
+                    watched: false,
+                },
+                $inc: {
+                    numberOfSeasons: 1,
+                },
+            }
+        );
+
+        if (!updatedTV) {
+            response.status(400).json({
+                message: "Error when updating TV due to update of season.",
+            });
+            return;
+        }
+
         response.status(201).json({
             message: "New TV season registered successfully.",
             tvSeason: newTVSeason,
         });
     } catch (error) {
-        console.log("error when creating new tv season");
+        console.log("error when creating new tv season:", error);
         response
             .status(500)
             .json({ message: "Error when creating new TV season." });
@@ -71,10 +94,7 @@ export const updateTVSeason = async (request: Request, response: Response) => {
                     seasonTitle: tvSeason.seasonTitle,
                     seasonNumber: tvSeason.seasonNumber,
                     seasonDescription: tvSeason.seasonDescription,
-                    seasonNumberOfEpisodes: tvSeason.seasonNumberOfEpisodes,
-                    seasonWatched: tvSeason.seasonWatched,
                     seasonRating: tvSeason.seasonRating,
-                    seasonEpisodeIds: tvSeason.seasonEpisodeIds,
                 },
             }
         );
@@ -83,6 +103,45 @@ export const updateTVSeason = async (request: Request, response: Response) => {
             response
                 .status(400)
                 .json({ message: "Error when updating TV season." });
+            return;
+        }
+
+        const allSeasonsOfTVList: T_DBTVSeason[] = await TVModel.find({
+            id: tvSeason.seasonTVId,
+            userAccountId: tvSeason.seasonUserAccountId,
+        });
+
+        if (allSeasonsOfTVList.length < 1) {
+            response.status(400).json({
+                message:
+                    "Error when updating TV because no seasons were found.",
+            });
+            return;
+        }
+
+        const areAllSeasonsWatched: boolean =
+            allSeasonsOfTVList
+                .map((season: T_DBTVSeason) => season.seasonWatched)
+                .filter((watched: boolean) => !watched).length < 1;
+        const updatedTV = await TVModel.updateOne(
+            {
+                id: tvSeason.seasonTVId,
+                userAccountId: tvSeason.seasonUserAccountId,
+            },
+            {
+                $set: {
+                    watched: areAllSeasonsWatched,
+                },
+                $inc: {
+                    numberOfSeasons: 1,
+                },
+            }
+        );
+
+        if (!updatedTV) {
+            response.status(400).json({
+                message: "Error when updating TV because of updating season",
+            });
             return;
         }
 

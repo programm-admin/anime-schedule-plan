@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { T_DBTV } from "../shared/interfaces-and-types/tv.type";
-import { TVModel } from "../models/media/tv.model";
+import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
+import { TVModel, TVSeasonModel } from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 import { error } from "console";
 
@@ -27,10 +27,12 @@ export const createTV = async (request: Request, response: Response) => {
         }
 
         const newTV = new TVModel({
-            id: generateId(false),
+            id: generateId("TV"),
             userAccountId: tv.userAccountId,
             title: tv.title,
-            seasonIds: tv.seasonIds,
+            notes: tv.notes,
+            watched: false,
+            numberOfSeasons: 0,
         });
 
         await newTV.save();
@@ -59,7 +61,6 @@ export const updateTV = async (request: Request, response: Response) => {
             {
                 $set: {
                     title: tv.title,
-                    seasonIds: tv.seasonIds,
                     description: tv.description,
                     notes: tv.notes,
                 },

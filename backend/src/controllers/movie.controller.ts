@@ -17,7 +17,7 @@ export const createNewMovie = async (request: Request, response: Response) => {
         }
 
         const newMovie = new Movie({
-            id: generateId(true),
+            id: generateId("Movie"),
             title: movie.title,
             description: movie.description,
             plannedAirDate: movie.plannedAirDate,
