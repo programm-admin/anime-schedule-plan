@@ -15,8 +15,7 @@ import { revalidateTVAndSeason } from "../shared/functions/revalidate-watched-st
  * @returns void
  */
 export const createTVSeason = async (request: Request, response: Response) => {
-    const { token, tvSeason }: { token: string; tvSeason: T_DBTVSeason } =
-        request.body;
+    const { tvSeason }: { tvSeason: T_DBTVSeason } = request.body;
 
     try {
         const foundTVSeasonList: T_DBTVSeason[] = await TVSeasonModel.find({
@@ -69,7 +68,10 @@ export const createTVSeason = async (request: Request, response: Response) => {
 
         response.status(201).json({
             message: "New TV season registered successfully.",
-            tvSeason: newTVSeason,
+            tvSeason: {
+                title: newTVSeason.seasonTitle,
+                id: newTVSeason.seasonId,
+            },
         });
     } catch (error) {
         console.log("error when creating new tv season:", error);
@@ -86,10 +88,7 @@ export const createTVSeason = async (request: Request, response: Response) => {
  * @returns void
  */
 export const updateTVSeason = async (request: Request, response: Response) => {
-    const {
-        token,
-        tvSeason,
-    }: { token: DOMStringList; tvSeason: T_DBTVSeason } = request.body;
+    const { tvSeason }: { tvSeason: T_DBTVSeason } = request.body;
 
     try {
         const updatedTVSeason = await TVSeasonModel.updateOne(
@@ -168,8 +167,7 @@ export const updateTVSeason = async (request: Request, response: Response) => {
  * @returns void
  */
 export const deleteTVSeason = async (request: Request, response: Response) => {
-    const { token, tvSeason }: { token: string; tvSeason: T_DBTVSeason } =
-        request.body;
+    const { tvSeason }: { tvSeason: T_DBTVSeason } = request.body;
 
     try {
         // delete season

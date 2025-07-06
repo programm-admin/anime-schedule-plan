@@ -1,10 +1,17 @@
 import { Request, Response } from "express";
-import User from "../models/user.model";
+import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
 import generateUniqueId from "generate-unique-id";
 import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
+import {
+    T_DBUser,
+    T_LoginUser,
+    T_RegisterUser,
+    T_RequestUser,
+} from "../shared/interfaces-and-types/user.type";
+import { createUserToken } from "../shared/functions/create-user-token";
+import { generateId } from "../shared/functions/generate-id";
 
 dotenv.config();
 
@@ -20,33 +27,35 @@ const hashPassword = (password: string): Promise<string> => {
  * @returns void
  */
 export const registerUser = async (request: Request, response: Response) => {
-    const { userName, password } = request.body;
+    const { user }: { user: T_RegisterUser } = request.body;
 
     try {
-        const existingUser = await User.find({ userName: userName });
+        const existingUser = await UserModel.find({ userName: user.userName });
 
         if (existingUser.length > 0) {
-            console.log("bla in existing");
             response.status(400).json({ message: "Username already exists." });
             return;
         }
 
         const today: Date = new Date();
-        const passwordHash: string = await hashPassword(password);
-        const newUser = new User({
-            userName,
+        const passwordHash: string = await hashPassword(user.password);
+        const newUser = new UserModel({
+            userName: user.userName,
             password: passwordHash,
-            accountId: `${generateUniqueId(
-                UNIQUE_ID_OBJECT
-            )}-${generateUniqueId(UNIQUE_ID_OBJECT)}`,
+            userType: user.userType,
+            authId: generateId("User"),
+            accountId: generateId("UserAccount"),
             createdAccount: today,
             lastLogin: today,
+            userAuth: {
+                question: user.userAuth.question,
+                answer: user.userAuth.answer,
+            },
         });
 
         await newUser.save();
         response.status(201).json({
             message: "New user registered successfully.",
-            user: newUser,
         });
     } catch (error) {
         console.log("error when register new user", error);
@@ -63,18 +72,23 @@ export const registerUser = async (request: Request, response: Response) => {
  * @returns void
  */
 export const loginUser = async (request: Request, response: Response) => {
-    const { userName, password } = request.body;
+    const { user }: { user: T_LoginUser } = request.body;
 
     try {
-        const foundUsers = await User.find({ userName });
-        const user = foundUsers[0];
+        const foundUsers: T_DBUser[] = await UserModel.find({
+            userName: user.userName,
+        });
+        const foundUser = foundUsers[0];
 
-        if (!foundUsers || !user) {
+        if (!foundUsers || !foundUser) {
             response.status(400).json({ message: "Invalid credentials." });
             return;
         }
 
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        const isPasswordMatch = await bcrypt.compare(
+            user.password,
+            foundUser.password
+        );
 
         if (!isPasswordMatch) {
             response.status(400).json({
@@ -83,13 +97,18 @@ export const loginUser = async (request: Request, response: Response) => {
             return;
         }
 
-        const token = jwt.sign(
-            {
-                accountId: user.accountId,
-                userName: user.userName,
-            },
-            process.env.SECRET as string
-        );
+        const token: string | null = createUserToken({
+            userName: user.userName,
+            userType: user.userType,
+            authId: foundUser.authId,
+        });
+
+        if (!token) {
+            response.status(400).json({
+                message: "Could not create token because data is missing.",
+            });
+            return;
+        }
 
         response.status(200).json({
             message: "Login successful.",

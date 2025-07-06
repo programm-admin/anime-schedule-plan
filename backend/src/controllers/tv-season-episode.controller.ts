@@ -65,10 +65,8 @@ export const createTVSeasonEpisode = async (
     request: Request,
     response: Response
 ) => {
-    const {
-        token,
-        tvSeasonEpisode,
-    }: { token: string; tvSeasonEpisode: T_DBTVSeasonEpisode } = request.body;
+    const { tvSeasonEpisode }: { tvSeasonEpisode: T_DBTVSeasonEpisode } =
+        request.body;
 
     try {
         const foundTVSeasonEpisodeList: T_DBTVSeasonEpisode[] =
@@ -152,7 +150,10 @@ export const createTVSeasonEpisode = async (
 
         response.status(201).json({
             message: "Created new TV season episode successfully.",
-            episode: newTVSeasonEpisode,
+            tvSeasonEpisode: {
+                title: newTVSeasonEpisode.episodeTitle,
+                id: newTVSeasonEpisode.episodeId,
+            },
         });
     } catch (error) {
         console.log("error when creating new TV season episode:", error);
@@ -172,10 +173,8 @@ export const updateTVSeasonEpisode = async (
     request: Request,
     response: Response
 ) => {
-    const {
-        token,
-        tvSeasonEpisode,
-    }: { token: string; tvSeasonEpisode: T_DBTVSeasonEpisode } = request.body;
+    const { tvSeasonEpisode }: { tvSeasonEpisode: T_DBTVSeasonEpisode } =
+        request.body;
 
     try {
         const updatedTVSeasonEpisode = await TVSeasonEpisodeModel.updateOne(
@@ -224,10 +223,7 @@ export const updateTVSeasonEpisode = async (
             return;
         }
 
-        response.status(200).json({
-            message: "Updated episode successfully.",
-            episode: updatedTVSeasonEpisode,
-        });
+        response.status(200).json({ message: "Updated episode successfully." });
     } catch (error) {
         console.log("error when updating episode:", error);
         response
@@ -246,10 +242,8 @@ export const deleteTVSeasonEpisode = async (
     request: Request,
     response: Response
 ) => {
-    const {
-        token,
-        tvSeasonEpisode,
-    }: { token: string; tvSeasonEpisode: T_DBTVSeasonEpisode } = request.body;
+    const { tvSeasonEpisode }: { tvSeasonEpisode: T_DBTVSeasonEpisode } =
+        request.body;
 
     try {
         const deletedEpisode = await TVSeasonEpisodeModel.deleteOne({
