@@ -5,6 +5,11 @@ import generateUniqueId from "generate-unique-id";
 import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import {
+    T_DBUser,
+    T_RegisterUser,
+} from "../shared/interfaces-and-types/user.type";
+import { createUserToken } from "../shared/functions/create-user-token";
 
 dotenv.config();
 
@@ -20,10 +25,11 @@ const hashPassword = (password: string): Promise<string> => {
  * @returns void
  */
 export const registerUser = async (request: Request, response: Response) => {
-    const { userName, password } = request.body;
+    const { user }: { user: T_RegisterUser } = request.body;
+    console.log("\n", JSON.stringify(user));
 
     try {
-        const existingUser = await User.find({ userName: userName });
+        const existingUser = await User.find({ userName: user.userName });
 
         if (existingUser.length > 0) {
             console.log("bla in existing");
@@ -32,15 +38,20 @@ export const registerUser = async (request: Request, response: Response) => {
         }
 
         const today: Date = new Date();
-        const passwordHash: string = await hashPassword(password);
+        const passwordHash: string = await hashPassword(user.password);
         const newUser = new User({
-            userName,
+            userName: user.userName,
             password: passwordHash,
+            userType: user.userType,
             accountId: `${generateUniqueId(
                 UNIQUE_ID_OBJECT
             )}-${generateUniqueId(UNIQUE_ID_OBJECT)}`,
             createdAccount: today,
             lastLogin: today,
+            userAuth: {
+                question: user.userAuth.question,
+                answer: user.userAuth.answer,
+            },
         });
 
         await newUser.save();
@@ -63,18 +74,23 @@ export const registerUser = async (request: Request, response: Response) => {
  * @returns void
  */
 export const loginUser = async (request: Request, response: Response) => {
-    const { userName, password } = request.body;
+    const { user }: { user: T_RegisterUser } = request.body;
 
     try {
-        const foundUsers = await User.find({ userName });
-        const user = foundUsers[0];
+        const foundUsers: T_DBUser[] = await User.find({
+            userName: user.userName,
+        });
+        const foundUser = foundUsers[0];
 
-        if (!foundUsers || !user) {
+        if (!foundUsers || !foundUser) {
             response.status(400).json({ message: "Invalid credentials." });
             return;
         }
 
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        const isPasswordMatch = await bcrypt.compare(
+            user.password,
+            foundUser.password
+        );
 
         if (!isPasswordMatch) {
             response.status(400).json({
@@ -83,13 +99,21 @@ export const loginUser = async (request: Request, response: Response) => {
             return;
         }
 
-        const token = jwt.sign(
-            {
-                accountId: user.accountId,
-                userName: user.userName,
+        const token: string | null = createUserToken({
+            userName: user.userName,
+            userType: user.userType,
+            userAuth: {
+                question: user.userAuth.question,
+                answer: user.userAuth.answer,
             },
-            process.env.SECRET as string
-        );
+        });
+
+        if (!token) {
+            response.status(400).json({
+                message: "Could not create token because data is missing.",
+            });
+            return;
+        }
 
         response.status(200).json({
             message: "Login successful.",

@@ -7,6 +7,7 @@ import movieRoutes from "./routes/movie.route";
 import tvRoutes from "./routes/tv/tv.route";
 import tvSeasonRoutes from "./routes/tv/tv-season.route";
 import tvSeasonEpisodeRoutes from "./routes/tv/tv-season-episode.route";
+import { verifyToken } from "./middleware/authUser.middleware";
 
 dotenv.config();
 
@@ -19,10 +20,10 @@ app.use(express.json());
 
 // Routes
 app.use("/api/user", userRoutes);
-app.use("/api/movie", movieRoutes);
-app.use("/api/tv-season-episode", tvSeasonEpisodeRoutes);
-app.use("/api/tv-season", tvSeasonRoutes);
-app.use("/api/tv", tvRoutes);
+app.use("/api/movie", verifyToken, movieRoutes);
+app.use("/api/tv-season-episode", verifyToken, tvSeasonEpisodeRoutes);
+app.use("/api/tv-season", verifyToken, tvSeasonRoutes);
+app.use("/api/tv", verifyToken, tvRoutes);
 
 // DB & Server Start
 connectDB().then(() => {
