@@ -15,7 +15,7 @@ import { error } from "console";
  * @returns void
  */
 export const createTV = async (request: Request, response: Response) => {
-    const { token, tv }: { token: string; tv: T_DBTV } = request.body;
+    const { tv }: { tv: T_DBTV } = request.body;
 
     try {
         const foundTVList: T_DBTV[] = await TVModel.find({
@@ -42,7 +42,7 @@ export const createTV = async (request: Request, response: Response) => {
         await newTV.save();
         response.status(201).json({
             message: "New TV registered successfully.",
-            tv: newTV,
+            tv: { title: newTV.title, id: newTV.id },
         });
     } catch (error) {
         console.log("error when insert new tv");
@@ -57,7 +57,7 @@ export const createTV = async (request: Request, response: Response) => {
  * @returns void
  */
 export const updateTV = async (request: Request, response: Response) => {
-    const { token, tv }: { token: string; tv: T_DBTV } = request.body;
+    const { tv }: { tv: T_DBTV } = request.body;
 
     try {
         const updatedTV = await TVModel.updateOne(
@@ -76,9 +76,7 @@ export const updateTV = async (request: Request, response: Response) => {
             return;
         }
 
-        response
-            .status(200)
-            .json({ message: "Updated tv successfully.", tv: updatedTV });
+        response.status(200).json({ message: "Updated tv successfully." });
     } catch (eror) {
         console.log("error when updating tv", error);
         response.status(500).json({ message: "Error when updating tv." });
@@ -93,7 +91,7 @@ export const updateTV = async (request: Request, response: Response) => {
  */
 
 export const deleteTV = async (request: Request, response: Response) => {
-    const { token, tv }: { token: string; tv: T_DBTV } = request.body;
+    const { tv }: { tv: T_DBTV } = request.body;
 
     try {
         // delete tv
