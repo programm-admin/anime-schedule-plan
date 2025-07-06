@@ -4,9 +4,10 @@ import { T_DBUser } from "../shared/interfaces-and-types/user.type";
 export type T_MONGO_DBUser = T_DBUser & Document;
 
 const UserSchema: Schema<T_MONGO_DBUser> = new mongoose.Schema({
-    userName: { type: String, required: true },
+    userName: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     userType: { type: String, required: true },
+    authId: { type: String, required: true },
     accountId: { type: String, required: true, unique: true },
     createdAccount: { type: Date, required: true },
     lastLogin: { type: Date, required: true },
@@ -16,4 +17,4 @@ const UserSchema: Schema<T_MONGO_DBUser> = new mongoose.Schema({
     },
 });
 
-export default mongoose.model("User", UserSchema);
+export const UserModel = mongoose.model("User", UserSchema);

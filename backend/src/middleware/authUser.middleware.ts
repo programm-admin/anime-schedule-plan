@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import {
-    T_RequestUser,
+    T_DBUser,
     T_RequestUserPayload,
 } from "../shared/interfaces-and-types/user.type";
+import { UserModel } from "../models/user.model";
 
 const SECRET = process.env.SECRET_USER || "";
 
-export const verifyToken = (
+export const verifyToken = async (
     request: Request,
     response: Response,
     next: NextFunction
@@ -37,14 +38,22 @@ export const verifyToken = (
         ) as T_RequestUserPayload;
 
         // check content of token
-        if (
-            !decoded.userName ||
-            !decoded.userType ||
-            !decoded.userAuth ||
-            (decoded.userAuth && !decoded.userAuth.question) ||
-            (decoded.userAuth && !decoded.userAuth.answer)
-        ) {
+        if (!decoded.userName || !decoded.userType || !decoded.authId) {
             response.status(403).json({ message: "Token is invalid." });
+            return;
+        }
+
+        // check if user exists in DB
+        const foundUsers: T_DBUser[] = await UserModel.find({
+            authId: decoded.authId,
+            userName: decoded.userName,
+            userType: decoded.userType,
+        });
+
+        if (foundUsers.length < 1) {
+            response
+                .status(400)
+                .json({ message: "Token is invalid for user." });
             return;
         }
 

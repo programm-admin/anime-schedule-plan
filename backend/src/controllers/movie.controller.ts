@@ -4,7 +4,7 @@ import { T_DBMovie } from "../shared/interfaces-and-types/movie.type";
 import { generateId } from "../shared/functions/generate-id";
 
 export const createNewMovie = async (request: Request, response: Response) => {
-    const { token, movie }: { token: string; movie: T_DBMovie } = request.body;
+    const { movie }: { movie: T_DBMovie } = request.body;
 
     try {
         const foundMovies: T_DBMovie[] = await MovieModel.find({
@@ -25,12 +25,13 @@ export const createNewMovie = async (request: Request, response: Response) => {
             watched: movie.watched,
             rating: movie.rating,
             notes: movie.notes,
+            userAccountId: movie.userAccountId,
         });
 
         await newMovie.save();
         response.status(201).json({
             message: "New movie registered successfully.",
-            movie: newMovie,
+            movie: { title: newMovie.title, id: newMovie.id },
         });
     } catch (error) {
         console.log("error when insert new movie:", error);
@@ -39,13 +40,13 @@ export const createNewMovie = async (request: Request, response: Response) => {
 };
 
 export const updateMovie = async (request: Request, response: Response) => {
-    const { token, movie }: { token: string; movie: T_DBMovie } = request.body;
+    const { movie }: { movie: T_DBMovie } = request.body;
 
     try {
-        const updatedMovie: T_DBMovie | null =
-            await MovieModel.findByIdAndUpdate(
-                movie._id,
-                {
+        const updatedMovie = await MovieModel.updateOne(
+            { userAccountId: movie.userAccountId, id: movie.id },
+            {
+                $set: {
                     title: movie.title,
                     description: movie.description,
                     plannedAirDate: movie.plannedAirDate,
@@ -54,8 +55,9 @@ export const updateMovie = async (request: Request, response: Response) => {
                     rating: movie.rating,
                     notes: movie.notes,
                 },
-                { new: true }
-            );
+            },
+            { new: true }
+        );
 
         if (!updateMovie) {
             response

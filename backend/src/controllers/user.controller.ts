@@ -1,15 +1,17 @@
 import { Request, Response } from "express";
-import User from "../models/user.model";
+import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
 import generateUniqueId from "generate-unique-id";
 import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 import {
     T_DBUser,
+    T_LoginUser,
     T_RegisterUser,
+    T_RequestUser,
 } from "../shared/interfaces-and-types/user.type";
 import { createUserToken } from "../shared/functions/create-user-token";
+import { generateId } from "../shared/functions/generate-id";
 
 dotenv.config();
 
@@ -26,26 +28,23 @@ const hashPassword = (password: string): Promise<string> => {
  */
 export const registerUser = async (request: Request, response: Response) => {
     const { user }: { user: T_RegisterUser } = request.body;
-    console.log("\n", JSON.stringify(user));
 
     try {
-        const existingUser = await User.find({ userName: user.userName });
+        const existingUser = await UserModel.find({ userName: user.userName });
 
         if (existingUser.length > 0) {
-            console.log("bla in existing");
             response.status(400).json({ message: "Username already exists." });
             return;
         }
 
         const today: Date = new Date();
         const passwordHash: string = await hashPassword(user.password);
-        const newUser = new User({
+        const newUser = new UserModel({
             userName: user.userName,
             password: passwordHash,
             userType: user.userType,
-            accountId: `${generateUniqueId(
-                UNIQUE_ID_OBJECT
-            )}-${generateUniqueId(UNIQUE_ID_OBJECT)}`,
+            authId: generateId("User"),
+            accountId: generateId("UserAccount"),
             createdAccount: today,
             lastLogin: today,
             userAuth: {
@@ -57,7 +56,6 @@ export const registerUser = async (request: Request, response: Response) => {
         await newUser.save();
         response.status(201).json({
             message: "New user registered successfully.",
-            user: newUser,
         });
     } catch (error) {
         console.log("error when register new user", error);
@@ -74,10 +72,10 @@ export const registerUser = async (request: Request, response: Response) => {
  * @returns void
  */
 export const loginUser = async (request: Request, response: Response) => {
-    const { user }: { user: T_RegisterUser } = request.body;
+    const { user }: { user: T_LoginUser } = request.body;
 
     try {
-        const foundUsers: T_DBUser[] = await User.find({
+        const foundUsers: T_DBUser[] = await UserModel.find({
             userName: user.userName,
         });
         const foundUser = foundUsers[0];
@@ -102,10 +100,7 @@ export const loginUser = async (request: Request, response: Response) => {
         const token: string | null = createUserToken({
             userName: user.userName,
             userType: user.userType,
-            userAuth: {
-                question: user.userAuth.question,
-                answer: user.userAuth.answer,
-            },
+            authId: foundUser.authId,
         });
 
         if (!token) {

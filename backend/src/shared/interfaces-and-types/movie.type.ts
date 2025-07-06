@@ -1,5 +1,4 @@
 export type T_DBMovie = {
-    _id: string;
     id: string;
     userAccountId: string;
     title: string;
