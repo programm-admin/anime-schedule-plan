@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import {
     T_DBUser,
     T_RequestUserPayload,
@@ -38,10 +38,16 @@ export const verifyToken = async (
         ) as T_RequestUserPayload;
 
         // check content of token
-        if (!decoded.userName || !decoded.userType || !decoded.authId) {
+        if (
+            !decoded.userName ||
+            !decoded.userType ||
+            !decoded.authId ||
+            !decoded.exp
+        ) {
             response.status(403).json({ message: "Token is invalid." });
             return;
         }
+
 
         // check if user exists in DB
         const foundUsers: T_DBUser[] = await UserModel.find({
@@ -59,6 +65,11 @@ export const verifyToken = async (
 
         next();
     } catch (error) {
+        if (error instanceof TokenExpiredError) {
+            response.status(401).json({ message: "Token is expired." });
+            return;
+        }
+
         response.status(403).json({ message: "Token is invalid." });
         return;
     }
