@@ -113,6 +113,7 @@ export const loginUser = async (request: Request, response: Response) => {
         response.status(200).json({
             message: "Login successful.",
             token,
+            lastLogin: new Date(),
         });
     } catch (error) {
         console.log("Error when log in user.");

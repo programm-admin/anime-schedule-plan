@@ -1,16 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-    IAUTH_REPOSITORY_TOKEN,
-    IAuthRepository,
-} from '../../services/auth-repository.interface';
+    IT_USER_REPOSITORY,
+    TF_UserRepository,
+} from '../../domain/user.repository';
+import { TF_RegisterUser } from '../../../shared/types/user/register-user.type';
+import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
+import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class UCDelete {
+@Injectable()
+export class UC_User_DeleteAccount {
     constructor(
-        @Inject(IAUTH_REPOSITORY_TOKEN) private authRepository: IAuthRepository
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: TF_UserRepository
     ) {}
 
-    public execute = (userName: string, password: string): void => {
-        this.authRepository.deleteAccount(userName, password);
+    public execute = (
+        deleteData: TF_RegisterUser
+    ): Observable<TF_RequestResponseMessage> => {
+        return this.userRepository.deleteUser(deleteData);
     };
 }

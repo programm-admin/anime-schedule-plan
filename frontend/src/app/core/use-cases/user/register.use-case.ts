@@ -1,15 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
-import { IAUTH_REPOSITORY_TOKEN, IAuthRepository } from '../../services/auth-repository.interface';
+import {
+    IT_USER_REPOSITORY,
+    TF_UserRepository,
+} from '../../domain/user.repository';
+import { TF_RegisterUser } from '../../../shared/types/user/register-user.type';
+import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
 import { Observable } from 'rxjs';
-import { IUser } from '../../models/user.model';
 
-@Injectable({ providedIn: 'root' })
-export class UCRegister {
+@Injectable()
+export class UC_User_RegisterUser {
     constructor(
-        @Inject(IAUTH_REPOSITORY_TOKEN) private authRepository: IAuthRepository
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: TF_UserRepository
     ) {}
 
-    execute(email: string, password: string): Observable<void> {
-        return this.authRepository.register(email, password);
-    }
+    public execute = (
+        registerData: TF_RegisterUser
+    ): Observable<TF_RequestResponseMessage> => {
+        return this.userRepository.registerUser(registerData);
+    };
 }

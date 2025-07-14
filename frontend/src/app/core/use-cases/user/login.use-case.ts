@@ -1,21 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-    IAUTH_REPOSITORY_TOKEN,
-    IAuthRepository,
-} from '../../services/auth-repository.interface';
+    IT_USER_REPOSITORY,
+    TF_UserRepository,
+} from '../../domain/user.repository';
+import { TF_LoginUser } from '../../../shared/types/user/login-user.type';
+import { TF_RequestResponseUserLogin } from '../../../shared/types/user/response-user-login.type';
 import { Observable } from 'rxjs';
-import { IUser } from '../../models/user.model';
 
-@Injectable({ providedIn: 'root' })
-export class UCLogin {
+@Injectable()
+export class UC_User_LoginUser {
     constructor(
-        @Inject(IAUTH_REPOSITORY_TOKEN) private authRepository: IAuthRepository
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: TF_UserRepository
     ) {}
 
     public execute = (
-        userName: string,
-        password: string
-    ): Observable<IUser> => {
-        return this.authRepository.login(userName, password);
+        loginData: TF_LoginUser
+    ): Observable<TF_RequestResponseUserLogin> => {
+        return this.userRepository.loginUser(loginData);
     };
 }
