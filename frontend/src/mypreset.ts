@@ -1,9 +1,6 @@
 //mypreset.ts
 import { definePreset } from '@primeng/themes';
-import Aura from '@primeng/themes/aura';
-import Lara from '@primeng/themes/lara';
 import Material from '@primeng/themes/material';
-import Nora from '@primeng/themes/nora';
 
 export const MyPreset = definePreset(Material, {
     semantic: {
