@@ -6,17 +6,13 @@ import {
     provideClientHydration,
     withEventReplay,
 } from '@angular/platform-browser';
-import { IAUTH_REPOSITORY_TOKEN } from './core/services/auth-repository.interface';
-import { AuthApiService } from './infrastructure/auth-api/auth-api.service';
+import { getProviders } from '../../app.providers';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
         provideClientHydration(withEventReplay()),
-        {
-            provide: IAUTH_REPOSITORY_TOKEN,
-            useClass: AuthApiService,
-        },
+        ...getProviders(),
     ],
 };

@@ -1,6 +1,6 @@
-export interface IUser {
-    id: string;
+export type TF_User = {
+    // TF = Type Frontend
     userName: string;
     userToken: string;
-    password: string;
-}
+    userLastLogin: Date;
+};
