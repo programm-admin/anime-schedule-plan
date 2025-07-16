@@ -8,8 +8,6 @@ import {
 import { getProviders } from '../../app.providers';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import Lara from '@primeuix/themes/lara';
-import Aura from '@primeuix/themes/aura';
 import { MyPreset } from '../mypreset';
 
 export const appConfig: ApplicationConfig = {
