@@ -8,18 +8,19 @@
 }
 
 .headerButton {
-    height: 4rem;
+    height: 3.2rem;
     width: 10rem;
     background-color: transparent;
     color: var(--header--color);
-    font-size: calc(1.1 * var(--standard--font--size));
+    font-size: var(--standard--font--size);
 
     border: none;
     transition-duration: var(--standard--transition--duration);
 }
 
 .headerButton:hover {
-    border-bottom: 0.1rem solid white;
+    border: 0.1rem solid red;
+    // height: 3.2rem;
     background-color: black;
     color: white;
     cursor: pointer;

@@ -1,0 +1,26 @@
+.appWrapper {
+    width: 100vw;
+    height: 100vh;
+}
+
+.appHeader {
+    width: 100%;
+    height: 3.5rem;
+    background-color: var(--header--background--color);
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding-left: var(--standard--padding--left-right);
+    padding-right: var(--standard--padding--left-right);
+}
+
+.appHeader img {
+    height: 82%;
+}
+
+.appContent {
+    padding-left: calc(2 * var(--standard--padding--left-right));
+    padding-right: calc(2 * var(--standard--padding--left-right));
+}
