@@ -1,6 +1,14 @@
 <div class="headerMain">
-    <button class="headerButton">Suche</button>
-    <button class="headerButton">Mein Plan</button>
-    <span class="headerButtonDivider"></span>
-    <button class="headerButton">Account</button>
+    <div class="leftSideDIV">
+        <button class="headerButton">Suche</button>
+        <button class="headerButton">Meine Pläne</button>
+        <span class="headerButtonDivider"></span>
+    </div>
+    <button
+        class="headerButton"
+        [pTooltip]="isUserLoggedIn ? 'Accounteinstellungen' : 'Einloggen'"
+        tooltipPosition="bottom"
+    >
+        <span class="pi pi-user"></span>
+    </button>
 </div>

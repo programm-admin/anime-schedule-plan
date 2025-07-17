@@ -35,7 +35,7 @@ export class INFREP_User implements TF_UserRepository {
 
     constructor(
         @Inject(PLATFORM_ID) private readonly platformId: Object,
-        private readonly http: HttpClient
+        private http: HttpClient
     ) {}
 
     private getRequestInformation = (

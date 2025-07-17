@@ -9,6 +9,7 @@ import { getProviders } from '../../app.providers';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import { MyPreset } from '../mypreset';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -21,5 +22,6 @@ export const appConfig: ApplicationConfig = {
             theme: { preset: MyPreset },
             // ripple: true,
         }),
+        provideHttpClient(),
     ],
 };
