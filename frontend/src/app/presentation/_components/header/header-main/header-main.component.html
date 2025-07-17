@@ -9,6 +9,10 @@
         [pTooltip]="isUserLoggedIn ? 'Accounteinstellungen' : 'Einloggen'"
         tooltipPosition="bottom"
     >
+        @if (isUserLoggedIn) {
+        <span class="pi pi-sign-out"></span>
+        } @else {
         <span class="pi pi-user"></span>
+        }
     </button>
 </div>
