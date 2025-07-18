@@ -1,5 +1,8 @@
 .headerMain {
-    width: 92vw;
+    width: calc(
+        100vw - var(--header-logo-width) - 1 *
+            var(--standard--padding--left-right)
+    );
     height: 100%;
 
     display: flex;
@@ -16,13 +19,20 @@
 
 .headerButton {
     height: 3.2rem;
-    width: 10rem;
     background-color: transparent;
     color: var(--header--color);
     font-size: var(--standard--font--size);
 
     border: none;
     transition-duration: var(--standard--transition--duration);
+}
+
+.headerButtonLeft {
+    width: 10rem;
+}
+
+.headerButtonRight {
+    width: 5rem;
 }
 
 .headerButton:hover {

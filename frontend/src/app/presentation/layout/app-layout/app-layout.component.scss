@@ -18,7 +18,8 @@
 }
 
 .appHeader img {
-    height: 82%;
+    // height: 82%;
+    width: var(--header-logo-width);
 }
 
 .appContent {
@@ -28,10 +29,7 @@
     height: 60%;
     overflow-y: auto;
 
-    background: linear-gradient(
-        var(--standard--background--color1),
-        var(--header--background--color)
-    );
+    background: linear-gradient(var(--header--background--color), black);
     color: var(--header--color);
 }
 
