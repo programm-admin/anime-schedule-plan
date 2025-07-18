@@ -4,10 +4,14 @@
         <button class="headerButton headerButtonLeft">Meine Pläne</button>
         <span class="headerButtonDivider"></span>
     </div>
+    <p-menu #menu [model]="menuItems" [popup]="true" />
     <button
         class="headerButton headerButtonRight"
-        [pTooltip]="isUserLoggedIn ? 'Accounteinstellungen' : 'Einloggen'"
+        [pTooltip]="
+            isUserLoggedIn ? 'Accounteinstellungen' : 'Einloggen/ Registrieren'
+        "
         tooltipPosition="bottom"
+        (click)="menu.toggle($event)"
     >
         @if (isUserLoggedIn) {
         <span class="pi pi-sign-out"></span>
