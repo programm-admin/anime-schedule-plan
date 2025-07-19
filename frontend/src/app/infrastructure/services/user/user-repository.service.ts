@@ -1,6 +1,6 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { TF_UserRepository } from '../../../core/domain/user.repository';
-import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, pipe, tap } from 'rxjs';
 import { TF_User } from '../../../core/models/user.model';
 import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
 import { TF_LoginUser } from '../../../shared/types/user/login-user.type';
@@ -54,22 +54,16 @@ export class INFREP_User implements TF_UserRepository {
     public registerUser = (
         registerData: TF_RegisterUser
     ): Observable<TF_RequestResponseMessage> => {
-        const requestData: TF_RequestInformation =
-            this.getRequestInformation('REGISTER_USER');
+        const API_URL: string | null = getAPIRoute('USER-REGISTER');
 
-        if (!requestData) return EMPTY;
+        if (!API_URL) return EMPTY;
 
         return this.http
-            .post<TF_RequestResponseMessage>(
-                requestData.apiUrl,
-                JSON.stringify(registerData),
-                {
-                    headers: requestData.httpHeader,
-                }
-            )
+            .post<TF_RequestResponseMessage>(API_URL, registerData)
             .pipe(
                 tap(() => {
                     this.logoutUser();
+                    console.log('bla');
                 })
             );
     };
@@ -78,14 +72,14 @@ export class INFREP_User implements TF_UserRepository {
         loginData: TF_LoginUser
     ): Observable<TF_RequestResponseUserLogin> => {
         const requestData: TF_RequestInformation =
-            this.getRequestInformation('LOGIN_USER');
+            this.getRequestInformation('USER-LOGIN');
 
         if (!requestData) return EMPTY;
 
         return this.http
             .post<TF_RequestResponseUserLogin>(
                 requestData.apiUrl,
-                JSON.stringify(requestData),
+                requestData,
                 { headers: requestData.httpHeader }
             )
             .pipe(
@@ -128,7 +122,7 @@ export class INFREP_User implements TF_UserRepository {
         deleteData: TF_RegisterUser
     ): Observable<TF_RequestResponseMessage> => {
         const requestData: TF_RequestInformation =
-            this.getRequestInformation('DELETE_ACCOUNT');
+            this.getRequestInformation('USER-DELETE');
 
         if (!requestData) return EMPTY;
 

@@ -27,13 +27,16 @@ const hashPassword = (password: string): Promise<string> => {
  * @returns void
  */
 export const registerUser = async (request: Request, response: Response) => {
+    console.log("\nrequest", request.body);
     const { user }: { user: T_RegisterUser } = request.body;
 
     try {
         const existingUser = await UserModel.find({ userName: user.userName });
 
         if (existingUser.length > 0) {
-            response.status(400).json({ message: "Username already exists." });
+            response
+                .status(400)
+                .json({ message: "Der Nutzername existiert bereits." });
             return;
         }
 
@@ -55,12 +58,12 @@ export const registerUser = async (request: Request, response: Response) => {
 
         await newUser.save();
         response.status(201).json({
-            message: "New user registered successfully.",
+            message: "Neuer Nutzer erfolgreich registriert.",
         });
     } catch (error) {
         console.log("error when register new user", error);
         response.status(500).json({
-            message: "Error when register new user.",
+            message: "Fehler beim Registrieren des Nutzers.",
         });
     }
 };

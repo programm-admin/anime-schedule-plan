@@ -10,6 +10,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { MyPreset } from '../mypreset';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -23,5 +24,6 @@ export const appConfig: ApplicationConfig = {
             // ripple: true,
         }),
         provideHttpClient(withFetch()),
+        MessageService,
     ],
 };

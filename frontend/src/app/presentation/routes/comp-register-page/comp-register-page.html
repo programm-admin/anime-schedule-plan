@@ -2,7 +2,12 @@
 
 @if (registerForm) {
 <div class="formWrapper">
-    <form action="submit" [formGroup]="registerForm" class="registerFORM">
+    <form
+        action="submit"
+        [formGroup]="registerForm"
+        class="registerFORM"
+        (ngSubmit)="submitForm()"
+    >
         <div class="formItem">
             <p-float-label variant="over">
                 <input
@@ -11,7 +16,7 @@
                     pInputText
                     formControlName="userName"
                     autocomplete="off"
-                    [invalid]="registerForm.get('userName')?.value.length < 1"
+                    [invalid]="isFieldValid('userName')"
                 />
                 <label for="InpUserName">Nutzername (Pflichtfeld)</label>
             </p-float-label>

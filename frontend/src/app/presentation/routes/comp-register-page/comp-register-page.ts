@@ -21,6 +21,10 @@ import { SelectModule } from 'primeng/select';
 import { USER_AUTH_QUESTIONS } from '../../../shared/constants/user-auth-questions';
 import { Router } from '@angular/router';
 import { APP_ROUTES } from '../../../shared/constants/app-routes';
+import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
+import { ToastModule } from 'primeng/toast';
+import { UC_Message_ShowSuccessMessage } from '../../../core/use-cases/message/show-success-message.use-case';
+import { UC_Message_ShowErrorMessage } from '../../../core/use-cases/message/show-error-message.use-case';
 
 @Component({
     selector: 'app-comp-register-page',
@@ -33,10 +37,15 @@ import { APP_ROUTES } from '../../../shared/constants/app-routes';
         MessageModule,
         PasswordModule,
         SelectModule,
+        ToastModule,
     ],
     templateUrl: './comp-register-page.html',
     styleUrl: './comp-register-page.scss',
-    providers: [UC_User_RegisterUser],
+    providers: [
+        UC_User_RegisterUser,
+        UC_Message_ShowSuccessMessage,
+        UC_Message_ShowErrorMessage,
+    ],
 })
 export class COMPRegisterPage implements OnInit {
     public registerForm: FormGroup | null = null;
@@ -47,8 +56,10 @@ export class COMPRegisterPage implements OnInit {
 
     constructor(
         private readonly formBuilder: FormBuilder,
+        private readonly router: Router,
         private readonly registerUserUseCase: UC_User_RegisterUser,
-        private readonly router: Router
+        private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
+        private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage
     ) {}
 
     ngOnInit(): void {
@@ -111,20 +122,40 @@ export class COMPRegisterPage implements OnInit {
     };
 
     public submitForm = () => {
+        this.isFormSubmitted = true;
         if (this.registerForm?.invalid) {
             return;
         }
 
-        this.registerUserUseCase.execute({
-            userName: this.registerForm?.get('userName')?.value,
-            password: this.registerForm?.get('password')?.value,
-            userType: 'normal',
-            authId: '',
-            userAuth: {
-                question: '',
-                answer: '',
-            },
-        });
+        this.registerUserUseCase
+            .execute({
+                user: {
+                    userName: this.registerForm?.get('userName')?.value,
+                    password: this.registerForm?.get('password')?.value,
+                    userType: 'normal',
+                    authId: '',
+                    userAuth: {
+                        question: this.registerForm?.get('question')?.value,
+                        answer: this.registerForm?.get('answer')?.value,
+                    },
+                },
+            })
+            .subscribe({
+                next: () => {
+                    this.showSuccessMessageUseCase.execute({
+                        summary: 'Nutzer erfolgreich registriert.',
+                        detail: 'Der Nutzer wurde erfolgreich angelegt.',
+                    });
+                },
+                error: (err: any) => {
+                    this.showErrorMessageUseCase.execute({
+                        summary: 'Fehler beim Registrieren des Nutzers',
+                        detail: err.error.message
+                            ? err.error.message
+                            : err.error,
+                    });
+                },
+            });
     };
 
     public cancelRegistration = () => {
