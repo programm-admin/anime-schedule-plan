@@ -27,7 +27,21 @@ export const getAPIRoute = (
     }${splittedRoute[0].toLowerCase()}/${splittedRoute[1].toLowerCase()}`;
 };
 
-export const getHTTPHeader = (token: string): HttpHeaders => {
+export const getHTTPHeader = (
+    token: string,
+    withToken: boolean
+): HttpHeaders => {
+    const headers = new HttpHeaders(
+        withToken
+            ? {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer: ${token}`,
+              }
+            : {
+                  'Content-Type': 'application/json',
+              }
+    );
+
     return new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: `Bearer: ${token}`,

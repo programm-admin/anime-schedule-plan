@@ -1,0 +1,55 @@
+<h1>Einloggen</h1>
+
+@if (loginForm) {
+<div class="formWrapper">
+    <form action="submit" [formGroup]="loginForm" (ngSubmit)="submitForm()">
+        <div class="formItem">
+            <p-float-label variant="over">
+                <input
+                    type="text"
+                    pInputText
+                    formControlName="userName"
+                    autocomplete="off"
+                    [invalid]="checkFieldInvalid('userName')"
+                    id="InpUserName"
+                />
+                <label for="InpUserName">Nutzername (Pflichtfeld)</label>
+            </p-float-label>
+            @if (checkFieldInvalid("userName")) {
+            <p-message severity="error" variant="simple"
+                >Der Nutzername darf nicht leer sein und muss mindestens
+                {{INPUT_VARIABLES_LOCAL.userNameLength}} Zeichen
+                enthalten.</p-message
+            >
+            }
+        </div>
+
+        <div class="formItem">
+            <p-float-label variant="over">
+                <p-password
+                    id="InpPassword"
+                    formControlName="password"
+                    [invalid]="checkFieldInvalid('password')"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                />
+                <label for="InpPassword">Passwort (Pflichtfeld)</label>
+            </p-float-label>
+            @if (checkFieldInvalid("password")) {
+            <p-message severity="error" variant="simple">
+                Das Passwort darf nicht leer sein und muss mindestens
+                {{INPUT_VARIABLES_LOCAL.passwordLength}} Zeichen enthalten.
+            </p-message>
+            }
+        </div>
+
+        <p-button type="submit" label="Log In" icon="pi pi-sign-in" />
+        <p-button
+            label="Abbrechen"
+            icon="pi pi-times"
+            severity="secondary"
+            (onClick)="cancelLogin()"
+        />
+    </form>
+</div>
+}

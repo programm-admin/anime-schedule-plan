@@ -21,10 +21,13 @@ import { SelectModule } from 'primeng/select';
 import { USER_AUTH_QUESTIONS } from '../../../shared/constants/user-auth-questions';
 import { Router } from '@angular/router';
 import { APP_ROUTES } from '../../../shared/constants/app-routes';
-import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
 import { ToastModule } from 'primeng/toast';
 import { UC_Message_ShowSuccessMessage } from '../../../core/use-cases/message/show-success-message.use-case';
 import { UC_Message_ShowErrorMessage } from '../../../core/use-cases/message/show-error-message.use-case';
+import { isFieldInvalid } from '../../../shared/functions/validate-form-field.functions';
+import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
+import { COMPBase } from '../../_components/comp-base/comp-base';
+import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-comp-register-page',
@@ -47,7 +50,7 @@ import { UC_Message_ShowErrorMessage } from '../../../core/use-cases/message/sho
         UC_Message_ShowErrorMessage,
     ],
 })
-export class COMPRegisterPage implements OnInit {
+export class COMPRegisterPage extends COMPBase implements OnInit {
     public registerForm: FormGroup | null = null;
     public readonly INPUT_VARIABLES_LOCAL = INPUT_VARIABLES;
     public readonly INPUT_PASSWORD_VARIABLES_LOCAL = INPUT_PASSWORD_VARIABLES;
@@ -60,7 +63,9 @@ export class COMPRegisterPage implements OnInit {
         private readonly registerUserUseCase: UC_User_RegisterUser,
         private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
         private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage
-    ) {}
+    ) {
+        super();
+    }
 
     ngOnInit(): void {
         this.registerForm = this.formBuilder.group(
@@ -109,16 +114,12 @@ export class COMPRegisterPage implements OnInit {
         );
     }
 
-    public isFieldValid = (fieldName: string): boolean => {
-        if (this.registerForm) {
-            const fieldControl = this.registerForm.get(fieldName);
-
-            return (
-                (fieldControl?.invalid ?? false) &&
-                (fieldControl?.touched || this.isFormSubmitted)
-            );
-        }
-        return false;
+    public checkFieldInvalid = (fieldName: string): boolean => {
+        return isFieldInvalid(
+            this.registerForm,
+            fieldName,
+            this.isFormSubmitted
+        );
     };
 
     public submitForm = () => {
@@ -140,12 +141,15 @@ export class COMPRegisterPage implements OnInit {
                     },
                 },
             })
+            .pipe(takeUntil(this.destroy$))
             .subscribe({
-                next: () => {
+                next: (response: TF_RequestResponseMessage) => {
                     this.showSuccessMessageUseCase.execute({
                         summary: 'Nutzer erfolgreich registriert.',
-                        detail: 'Der Nutzer wurde erfolgreich angelegt.',
+                        detail: response.message,
                     });
+
+                    this.isFormSubmitted = false;
                 },
                 error: (err: any) => {
                     this.showErrorMessageUseCase.execute({

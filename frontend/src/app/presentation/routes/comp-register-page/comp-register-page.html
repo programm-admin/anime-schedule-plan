@@ -16,11 +16,11 @@
                     pInputText
                     formControlName="userName"
                     autocomplete="off"
-                    [invalid]="isFieldValid('userName')"
+                    [invalid]="checkFieldInvalid('userName')"
                 />
                 <label for="InpUserName">Nutzername (Pflichtfeld)</label>
             </p-float-label>
-            @if (isFieldValid("userName")) {
+            @if (checkFieldInvalid("userName")) {
             <p-message severity="error" variant="simple"
                 >Der Nutzername darf nicht leer sein und muss mindestens
                 {{INPUT_VARIABLES_LOCAL.userNameLength}} Zeichen
@@ -35,7 +35,7 @@
                     id="InpPassword"
                     formControlName="password"
                     autocomplete="off"
-                    [invalid]="registerForm.get('password')?.value.length < 1"
+                    [invalid]="checkFieldInvalid('password')"
                     [toggleMask]="true"
                     [weakLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.weakLabel"
                     [mediumLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.mediumLabel"
@@ -44,7 +44,7 @@
                 />
                 <label for="InpPassword">Passwort (Pflichtfeld)</label>
             </p-float-label>
-            @if (isFieldValid("password")) {
+            @if (checkFieldInvalid("password")) {
             <p-message severity="error" variant="simple"
                 >Das Passwort darf nicht leer sein und muss mindestens
                 {{INPUT_VARIABLES_LOCAL.passwordLength}} Zeichen
@@ -70,7 +70,7 @@
                     >Passwort (Pflichtfeld)</label
                 >
             </p-float-label>
-            @if (isFieldValid("passwordConfirmation") ||
+            @if (checkFieldInvalid("passwordConfirmation") ||
             (registerForm.get("passwordConfirmation")?.hasError("passwordsMismatch")))
             {
             <p-message severity="error" variant="simple"
@@ -104,7 +104,7 @@
                     >Antwort auf die ausgewählte Frage (Pflichtfeld)</label
                 >
             </p-float-label>
-            @if (isFieldValid("answer")) {
+            @if (checkFieldInvalid("answer")) {
             <p-message severity="error" variant="simple"
                 >Die Antwort darf nicht leer sein und muss mindestens
                 {{INPUT_VARIABLES_LOCAL.answerLength}} Zeichen

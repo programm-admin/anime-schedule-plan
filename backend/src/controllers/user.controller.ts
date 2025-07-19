@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
-import generateUniqueId from "generate-unique-id";
-import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
 import dotenv from "dotenv";
 import {
     T_DBUser,
@@ -27,7 +25,6 @@ const hashPassword = (password: string): Promise<string> => {
  * @returns void
  */
 export const registerUser = async (request: Request, response: Response) => {
-    console.log("\nrequest", request.body);
     const { user }: { user: T_RegisterUser } = request.body;
 
     try {
@@ -119,7 +116,7 @@ export const loginUser = async (request: Request, response: Response) => {
             lastLogin: new Date(),
         });
     } catch (error) {
-        console.log("Error when log in user.");
+        console.log("Error when log in user.", error);
         response.status(500).json({ message: "Error when log in user." });
     }
 };

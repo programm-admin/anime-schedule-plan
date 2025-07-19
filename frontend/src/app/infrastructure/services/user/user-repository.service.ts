@@ -39,31 +39,47 @@ export class INFREP_User implements TF_UserRepository {
     ) {}
 
     private getRequestInformation = (
-        url: TF_ApiUserRouteInput
+        url: TF_ApiUserRouteInput,
+        withAuthorization: boolean
     ): TF_RequestInformation => {
-        const currentUser: TF_User | null = this.getUser();
-        const apiUrl: string | null = getAPIRoute(url);
+        if (withAuthorization) {
+            const currentUser: TF_User | null = this.getUser();
+            const apiUrl: string | null = getAPIRoute(url);
 
-        if (!currentUser || !apiUrl) return null;
+            if (!currentUser || !apiUrl) return null;
 
-        const headers = getHTTPHeader(currentUser.userToken);
+            const headers = getHTTPHeader(currentUser.userToken, true);
 
-        return { httpHeader: headers, apiUrl };
+            return { httpHeader: headers, apiUrl };
+        } else {
+            // without token -> user is not necessary
+            const apiUrl: string | null = getAPIRoute(url);
+
+            if (!apiUrl) return null;
+
+            const headers = getHTTPHeader('', false);
+
+            return { httpHeader: headers, apiUrl };
+        }
     };
 
     public registerUser = (
         registerData: TF_RegisterUser
     ): Observable<TF_RequestResponseMessage> => {
-        const API_URL: string | null = getAPIRoute('USER-REGISTER');
+        const requestData: TF_RequestInformation = this.getRequestInformation(
+            'USER-REGISTER',
+            false
+        );
 
-        if (!API_URL) return EMPTY;
+        if (!requestData) return EMPTY;
 
         return this.http
-            .post<TF_RequestResponseMessage>(API_URL, registerData)
+            .post<TF_RequestResponseMessage>(requestData.apiUrl, registerData, {
+                headers: requestData.httpHeader,
+            })
             .pipe(
                 tap(() => {
                     this.logoutUser();
-                    console.log('bla');
                 })
             );
     };
@@ -71,41 +87,20 @@ export class INFREP_User implements TF_UserRepository {
     public loginUser = (
         loginData: TF_LoginUser
     ): Observable<TF_RequestResponseUserLogin> => {
-        const requestData: TF_RequestInformation =
-            this.getRequestInformation('USER-LOGIN');
+        const requestData: TF_RequestInformation = this.getRequestInformation(
+            'USER-LOGIN',
+            false
+        );
 
         if (!requestData) return EMPTY;
 
-        return this.http
-            .post<TF_RequestResponseUserLogin>(
-                requestData.apiUrl,
-                requestData,
-                { headers: requestData.httpHeader }
-            )
-            .pipe(
-                tap((response: TF_RequestResponseUserLogin) => {
-                    this.userSubject.next({
-                        userName: loginData.userName,
-                        userToken: response.token,
-                        userLastLogin: response.lastLogin,
-                    });
-
-                    if (isPlatformBrowser(this.platformId)) {
-                        localStorage.setItem(
-                            KEY_USER_NAME_LOCAL_STORAGE,
-                            loginData.userName
-                        );
-                        localStorage.setItem(
-                            KEY_USER_TOKEN_LOCAL_STORAGE,
-                            response.token
-                        );
-                        localStorage.setItem(
-                            KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
-                            response.lastLogin.toISOString()
-                        );
-                    }
-                })
-            );
+        return this.http.post<TF_RequestResponseUserLogin>(
+            requestData.apiUrl,
+            loginData,
+            {
+                headers: requestData.httpHeader,
+            }
+        );
     };
 
     public logoutUser = (): boolean => {
@@ -121,8 +116,10 @@ export class INFREP_User implements TF_UserRepository {
     public deleteUser = (
         deleteData: TF_RegisterUser
     ): Observable<TF_RequestResponseMessage> => {
-        const requestData: TF_RequestInformation =
-            this.getRequestInformation('USER-DELETE');
+        const requestData: TF_RequestInformation = this.getRequestInformation(
+            'USER-DELETE',
+            true
+        );
 
         if (!requestData) return EMPTY;
 
