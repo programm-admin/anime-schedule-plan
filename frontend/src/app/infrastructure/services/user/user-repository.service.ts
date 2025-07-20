@@ -1,7 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { TF_UserRepository } from '../../../core/domain/user.repository';
-import { BehaviorSubject, EMPTY, Observable, pipe, tap } from 'rxjs';
-import { TF_User } from '../../../core/models/user.model';
+import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
+import { TF_User, TF_UserFull } from '../../../core/models/user.model';
 import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
 import { TF_LoginUser } from '../../../shared/types/user/login-user.type';
 import { TF_RegisterUser } from '../../../shared/types/user/register-user.type';
@@ -28,27 +28,35 @@ import {
 export class INFREP_User implements TF_UserRepository {
     // INFREP = infrastructure repository
     // variables
-    private userSubject: BehaviorSubject<TF_User | null> =
-        new BehaviorSubject<TF_User | null>(null);
-    private userSubject$: Observable<TF_User | null> =
-        this.userSubject.asObservable();
+    private userSubject!: BehaviorSubject<TF_UserFull>;
+    private userSubject$!: Observable<TF_UserFull>;
 
     constructor(
         @Inject(PLATFORM_ID) private readonly platformId: Object,
         private http: HttpClient
-    ) {}
+    ) {
+        this.userSubject = new BehaviorSubject<TF_UserFull>({
+            user: null,
+            status: isPlatformBrowser(this.platformId) ? 'loading' : 'server',
+        });
+        this.userSubject$ = this.userSubject.asObservable();
+
+        if (isPlatformBrowser(this.platformId)) {
+            this.userSubject.next(this.getUser());
+        }
+    }
 
     private getRequestInformation = (
         url: TF_ApiUserRouteInput,
         withAuthorization: boolean
     ): TF_RequestInformation => {
         if (withAuthorization) {
-            const currentUser: TF_User | null = this.getUser();
+            const currentUser: TF_UserFull = this.getUser();
             const apiUrl: string | null = getAPIRoute(url);
 
-            if (!currentUser || !apiUrl) return null;
+            if (!currentUser.user || !apiUrl) return null;
 
-            const headers = getHTTPHeader(currentUser.userToken, true);
+            const headers = getHTTPHeader(currentUser.user.userToken, true);
 
             return { httpHeader: headers, apiUrl };
         } else {
@@ -104,12 +112,14 @@ export class INFREP_User implements TF_UserRepository {
     };
 
     public logoutUser = (): boolean => {
+        this.userSubject.next({ user: null, status: 'loading' });
+
         if (isPlatformBrowser(this.platformId)) {
             localStorage.clear();
             return true;
         }
 
-        this.userSubject.next(null);
+        this.userSubject.next({ user: null, status: 'finished' });
         return false;
     };
 
@@ -136,12 +146,12 @@ export class INFREP_User implements TF_UserRepository {
     };
 
     public getIsUserLoggedIn = (): boolean => {
-        const currentUser: TF_User | null = this.getUser();
+        const currentUser: TF_UserFull = this.getUser();
 
-        return currentUser ? true : false;
+        return currentUser.user !== null && currentUser.status === 'finished';
     };
 
-    public getUser = (): TF_User | null => {
+    public getUser = (): TF_UserFull => {
         if (isPlatformBrowser(this.platformId)) {
             const userName: string | null = localStorage.getItem(
                 KEY_USER_NAME_LOCAL_STORAGE
@@ -162,22 +172,29 @@ export class INFREP_User implements TF_UserRepository {
                 (userLastLogin && !userLastLogin.trim()) ||
                 (userLastLogin &&
                     userLastLogin.trim().length > 0 &&
-                    !isNaN(new Date(userLastLogin).getTime()))
+                    isNaN(new Date(userLastLogin).getTime()))
             ) {
-                return null;
+                return { user: null, status: 'finished' };
             }
 
             return {
-                userName,
-                userToken,
-                userLastLogin: new Date(userLastLogin),
+                user: {
+                    userName,
+                    userToken,
+                    userLastLogin: new Date(userLastLogin),
+                },
+                status: 'finished',
             };
         } else {
-            return null;
+            return { user: null, status: 'finished' };
         }
     };
 
-    public getUserSubject = (): Observable<TF_User | null> => {
+    public getUserSubject = (): Observable<TF_UserFull> => {
         return this.userSubject$;
+    };
+
+    public setUserSubject = (data: TF_User) => {
+        this.userSubject.next({ user: data, status: 'finished' });
     };
 }

@@ -4,3 +4,8 @@ export type TF_User = {
     userToken: string;
     userLastLogin: Date;
 };
+
+export type TF_UserFull = {
+    user: TF_User | null;
+    status: 'loading' | 'finished' | 'unknown' | 'server';
+};

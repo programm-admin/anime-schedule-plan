@@ -5,6 +5,8 @@
         <span class="headerButtonDivider"></span>
     </div>
     <p-menu #menu [model]="menuItems" [popup]="true" />
+
+    @if (!isUserLoading) {
     <button
         class="headerButton headerButtonRight"
         [pTooltip]="
@@ -19,4 +21,11 @@
         <span class="pi pi-user"></span>
         }
     </button>
+
+    } @else {
+    <div class="spinnerDIV">
+        <p-progress-spinner ariaLabel="loading" class="progessSpinner" />
+        <p>Laden ...</p>
+    </div>
+    }
 </div>

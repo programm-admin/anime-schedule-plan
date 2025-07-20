@@ -3,17 +3,16 @@ import {
     IT_USER_REPOSITORY,
     TF_UserRepository,
 } from '../../domain/user.repository';
-import { Observable } from 'rxjs';
-import { TF_UserFull } from '../../models/user.model';
+import { TF_User, TF_UserFull } from '../../models/user.model';
 
 @Injectable()
-export class UC_User_GetUserSubject {
+export class UC_User_SetUserSubject {
     constructor(
         @Inject(IT_USER_REPOSITORY)
         private readonly userRepository: TF_UserRepository
     ) {}
 
-    public execute = (): Observable<TF_UserFull> => {
-        return this.userRepository.getUserSubject();
+    public execute = (data: TF_User) => {
+        return this.userRepository.setUserSubject(data);
     };
 }

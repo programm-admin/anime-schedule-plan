@@ -50,3 +50,16 @@
     margin-left: 0.6rem;
     margin-right: 0.6rem;
 }
+
+.headerMain .spinnerDIV {
+    height: 3.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--header--color);
+    padding-right: var(--standard--padding--left-right);
+}
+
+.headerMain .spinnerDIV .progessSpinner {
+    height: 100%;
+}

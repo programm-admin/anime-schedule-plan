@@ -29,6 +29,8 @@ import {
     KEY_USER_NAME_LOCAL_STORAGE,
     KEY_USER_TOKEN_LOCAL_STORAGE,
 } from '../../../shared/constants/local-storage.constant';
+import { UC_LocalStorage_SetItem } from '../../../core/use-cases/localStorage/set-item.use-case';
+import { UC_User_SetUserSubject } from '../../../core/use-cases/user/set-user-subject.use-case';
 
 @Component({
     selector: 'app-comp-login-page',
@@ -46,6 +48,8 @@ import {
         UC_User_LoginUser,
         UC_Message_ShowSuccessMessage,
         UC_Message_ShowErrorMessage,
+        UC_LocalStorage_SetItem,
+        UC_User_SetUserSubject,
     ],
 })
 export class COMPLoginPage extends COMPBase implements OnInit {
@@ -59,7 +63,9 @@ export class COMPLoginPage extends COMPBase implements OnInit {
         private readonly router: Router,
         private readonly loginUserUseCase: UC_User_LoginUser,
         private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
+        private readonly setUserSubjectUseCase: UC_User_SetUserSubject,
         private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage,
+        private readonly setItemUseCase: UC_LocalStorage_SetItem,
         @Inject(PLATFORM_ID) private readonly platformId: Object
     ) {
         super();
@@ -106,24 +112,28 @@ export class COMPLoginPage extends COMPBase implements OnInit {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: TF_RequestResponseUserLogin) => {
-                    if (isPlatformBrowser(this.platformId)) {
-                        localStorage.setItem(
-                            KEY_USER_NAME_LOCAL_STORAGE,
-                            this.loginForm?.get('userName')?.value
-                        );
-                        localStorage.setItem(
-                            KEY_USER_TOKEN_LOCAL_STORAGE,
-                            response.token
-                        );
-                        localStorage.setItem(
-                            KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
-                            response.lastLogin.toString()
-                        );
-                    }
+                    this.setItemUseCase.execute(
+                        KEY_USER_NAME_LOCAL_STORAGE,
+                        this.loginForm?.get('userName')?.value
+                    );
+                    this.setItemUseCase.execute(
+                        KEY_USER_TOKEN_LOCAL_STORAGE,
+                        response.token
+                    );
+                    this.setItemUseCase.execute(
+                        KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
+                        response.lastLogin.toString()
+                    );
 
                     this.showSuccessMessageUseCase.execute({
                         summary: 'Erfolgreich eingeloggt',
                         detail: response.message,
+                    });
+
+                    this.setUserSubjectUseCase.execute({
+                        userName: this.loginForm?.get('userName')?.value,
+                        userToken: response.token,
+                        userLastLogin: response.lastLogin,
                     });
 
                     this.isFormSubmitted = false;
@@ -131,7 +141,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                 error: (err: any) => {
                     this.showErrorMessageUseCase.execute({
                         summary: 'Fehler beim Einloggen',
-                        detail: err.error,
+                        detail: err.error.message ?? JSON.stringify(err.error),
                     });
                 },
             });

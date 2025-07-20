@@ -8,4 +8,5 @@ export const APP_ROUTES: { [key: string]: TF_AppRoute } = {
         isVisible: true,
     },
     USER_LOGIN: { name: 'Einloggen', url: 'login', isVisible: true },
+    USER_START: { name: 'Meine Startseite', url: 'user', isVisible: true },
 };
