@@ -18,7 +18,7 @@ export type TF_UserRepository = {
     deleteUser: (
         deleteData: TF_RegisterUser
     ) => Observable<TF_RequestResponseMessage>;
-    getIsUserLoggedIn: () => boolean;
+    getIsUserLoggedIn: () => Observable<boolean>;
     getUser: () => TF_UserFull;
     getUserSubject: () => Observable<TF_UserFull>;
     setUserSubject: (data: TF_User) => void;

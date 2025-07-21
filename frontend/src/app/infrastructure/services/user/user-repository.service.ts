@@ -1,6 +1,6 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { computed, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { TF_UserRepository } from '../../../core/domain/user.repository';
-import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, map, Observable, tap } from 'rxjs';
 import { TF_User, TF_UserFull } from '../../../core/models/user.model';
 import { TF_RequestResponseMessage } from '../../../shared/types/request-response-message.type';
 import { TF_LoginUser } from '../../../shared/types/user/login-user.type';
@@ -145,10 +145,14 @@ export class INFREP_User implements TF_UserRepository {
             );
     };
 
-    public getIsUserLoggedIn = (): boolean => {
-        const currentUser: TF_UserFull = this.getUser();
-
-        return currentUser.user !== null && currentUser.status === 'finished';
+    public getIsUserLoggedIn = (): Observable<boolean> => {
+        return this.userSubject.pipe(
+            map(
+                (currentUser: TF_UserFull) =>
+                    currentUser.user !== null &&
+                    currentUser.status === 'finished'
+            )
+        );
     };
 
     public getUser = (): TF_UserFull => {

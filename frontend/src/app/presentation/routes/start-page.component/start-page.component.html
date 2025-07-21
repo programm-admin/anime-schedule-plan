@@ -1,4 +1,9 @@
 <h1>Startseite</h1>
+
+@if (user.status === "finished") { @if (user.user) {
+<p class="textP">Hallo {{ user.user.userName }}</p>
+
+} @else {
 <p class="textP">
     Hallo und willkommen bei der Anime-Schedule-Plan (ASP)-App. Hier kannst du
     deine Serien und Filme anlegen, managen und nachverfolgen. Die App bietet
@@ -11,3 +16,7 @@
     Filme gibt. <br />
     Viel Spaß mit der App.
 </p>
+} } @else {
+<p-progress-spinner ariaLabel="Laden ..." />
+<p>Laden ...</p>
+}

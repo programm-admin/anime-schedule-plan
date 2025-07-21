@@ -137,6 +137,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                     });
 
                     this.isFormSubmitted = false;
+                    this.router.navigateByUrl(APP_ROUTES['START'].url);
                 },
                 error: (err: any) => {
                     this.showErrorMessageUseCase.execute({
