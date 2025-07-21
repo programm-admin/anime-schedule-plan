@@ -1,21 +1,38 @@
 .headerMain {
-    width: 80%;
+    width: calc(
+        100vw - var(--header-logo-width) - 1 *
+            var(--standard--padding--left-right)
+    );
     height: 100%;
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerMain .leftSideDIV {
+    width: 28%;
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
 }
 
 .headerButton {
     height: 3.2rem;
-    width: 10rem;
     background-color: transparent;
     color: var(--header--color);
     font-size: var(--standard--font--size);
 
     border: none;
     transition-duration: var(--standard--transition--duration);
+}
+
+.headerButtonLeft {
+    width: 10rem;
+}
+
+.headerButtonRight {
+    width: 5rem;
 }
 
 .headerButton:hover {
@@ -32,4 +49,17 @@
     background-color: var(--header--color);
     margin-left: 0.6rem;
     margin-right: 0.6rem;
+}
+
+.headerMain .spinnerDIV {
+    height: 3.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--header--color);
+    padding-right: var(--standard--padding--left-right);
+}
+
+.headerMain .spinnerDIV .progessSpinner {
+    height: 100%;
 }

@@ -4,7 +4,7 @@ import {
     TF_UserRepository,
 } from '../../domain/user.repository';
 import { Observable } from 'rxjs';
-import { TF_User } from '../../models/user.model';
+import { TF_UserFull } from '../../models/user.model';
 
 @Injectable()
 export class UC_User_GetUserSubject {
@@ -13,7 +13,7 @@ export class UC_User_GetUserSubject {
         private readonly userRepository: TF_UserRepository
     ) {}
 
-    public execute = (): Observable<TF_User | null> => {
+    public execute = (): Observable<TF_UserFull> => {
         return this.userRepository.getUserSubject();
     };
 }

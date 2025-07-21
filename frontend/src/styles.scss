@@ -1,3 +1,5 @@
+@import "primeicons/primeicons.css";
+
 @font-face {
     font-family: "Noto Sans";
     src: url("assets/NotoSansJP-Regular.ttf") format("truetype");
@@ -19,9 +21,58 @@ body {
 :root {
     --header--background--color: rgba(35, 37, 43, 1);
     --header--color: rgba(255, 255, 255, 0.8);
+    --header-logo-width: 8vw;
 
     --standard--font--size: 1.4rem;
     --standard--transition--duration: 0.3s;
     --standard--padding--left-right: 1rem;
     --standard--padding--top-bottom: 1rem;
+
+    --standard--background--color1: rgba(20, 20, 20, 0.7);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+}
+
+h1 {
+    font-size: calc(1.4 * var(--standard--font--size));
+}
+
+.formWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    margin-top: calc(5 * var(--standard--padding--top-bottom));
+    width: 50%;
+}
+
+form button {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.p-inputtext,
+p-password,
+.p-select-label,
+.p-select {
+    width: 100%;
+    background: transparent !important;
+    color: var(--header--color) !important;
+}
+
+label,
+input {
+    color: var(--header--color) !important;
+}
+
+.formItem {
+    margin-bottom: 3rem;
 }

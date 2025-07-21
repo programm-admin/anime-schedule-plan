@@ -1,0 +1,129 @@
+<h1>Neuen Account anlegen</h1>
+
+@if (registerForm) {
+<div class="formWrapper">
+    <form
+        action="submit"
+        [formGroup]="registerForm"
+        class="registerFORM"
+        (ngSubmit)="submitForm()"
+    >
+        <div class="formItem">
+            <p-float-label variant="over">
+                <input
+                    id="InpUserName"
+                    type="text"
+                    pInputText
+                    formControlName="userName"
+                    autocomplete="off"
+                    [invalid]="checkFieldInvalid('userName')"
+                />
+                <label for="InpUserName">Nutzername (Pflichtfeld)</label>
+            </p-float-label>
+            @if (checkFieldInvalid("userName")) {
+            <p-message severity="error" variant="simple"
+                >Der Nutzername darf nicht leer sein und muss mindestens
+                {{INPUT_VARIABLES_LOCAL.userNameLength}} Zeichen
+                enthalten.</p-message
+            >
+            }
+        </div>
+
+        <div class="formItem">
+            <p-float-label variant="over">
+                <p-password
+                    id="InpPassword"
+                    formControlName="password"
+                    autocomplete="off"
+                    [invalid]="checkFieldInvalid('password')"
+                    [toggleMask]="true"
+                    [weakLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.weakLabel"
+                    [mediumLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.mediumLabel"
+                    [strongLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.strongLabel"
+                    [promptLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.promptLabel"
+                />
+                <label for="InpPassword">Passwort (Pflichtfeld)</label>
+            </p-float-label>
+            @if (checkFieldInvalid("password")) {
+            <p-message severity="error" variant="simple"
+                >Das Passwort darf nicht leer sein und muss mindestens
+                {{INPUT_VARIABLES_LOCAL.passwordLength}} Zeichen
+                enthalten.</p-message
+            >
+            }
+        </div>
+
+        <div class="formItem">
+            <p-float-label variant="over">
+                <p-password
+                    id="InpPasswordConfirmation"
+                    formControlName="passwordConfirmation"
+                    autocomplete="off"
+                    [invalid]="registerForm.get('passwordConfirmation')?.value.length < 1"
+                    [toggleMask]="true"
+                    [weakLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.weakLabel"
+                    [mediumLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.mediumLabel"
+                    [strongLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.strongLabel"
+                    [promptLabel]="INPUT_PASSWORD_VARIABLES_LOCAL.promptLabel"
+                />
+                <label for="InpPasswordConfirmation"
+                    >Passwort (Pflichtfeld)</label
+                >
+            </p-float-label>
+            @if (checkFieldInvalid("passwordConfirmation") ||
+            (registerForm.get("passwordConfirmation")?.hasError("passwordsMismatch")))
+            {
+            <p-message severity="error" variant="simple"
+                >Das Passwort darf nicht leer sein, muss mindestens
+                {{INPUT_VARIABLES_LOCAL.passwordLength}} Zeichen enthalten und
+                beide Passwörter müssen übereinstimmen.</p-message
+            >
+            }
+        </div>
+
+        <div class="formItem">
+            <p-select
+                [options]="INPUT_QUESTIONS"
+                formControlName="question"
+                placeholder="Eine Frage auswählen ..."
+                [checkmark]="true"
+            />
+        </div>
+
+        <div class="formItem">
+            <p-float-label variant="over">
+                <input
+                    id="InpAnswer"
+                    type="text"
+                    pInputText
+                    formControlName="answer"
+                    autocomplete="off"
+                    [invalid]="registerForm.get('answer')?.value.length < 1"
+                />
+                <label for="InpAnswer"
+                    >Antwort auf die ausgewählte Frage (Pflichtfeld)</label
+                >
+            </p-float-label>
+            @if (checkFieldInvalid("answer")) {
+            <p-message severity="error" variant="simple"
+                >Die Antwort darf nicht leer sein und muss mindestens
+                {{INPUT_VARIABLES_LOCAL.answerLength}} Zeichen
+                enthalten.</p-message
+            >
+            }
+        </div>
+
+        <p-button
+            label="Neuen Account erstellen"
+            icon="pi pi-plus-circle"
+            type="submit"
+        />
+        <p-button
+            label="Abbrechen"
+            icon="pi pi-times"
+            severity="secondary"
+            (onClick)="cancelRegistration()"
+        />
+    </form>
+</div>
+}

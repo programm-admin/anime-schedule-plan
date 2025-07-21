@@ -1,6 +1,8 @@
 export type TF_LoginUser = {
     // TF = Type Frontend
-    userName: string;
-    password: string;
-    userType: string;
+    user: {
+        userName: string;
+        password: string;
+        userType: string;
+    };
 };

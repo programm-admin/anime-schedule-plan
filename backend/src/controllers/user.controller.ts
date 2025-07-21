@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
-import generateUniqueId from "generate-unique-id";
-import { UNIQUE_ID_OBJECT } from "../shared/variables/unique-id-object";
 import dotenv from "dotenv";
 import {
     T_DBUser,
@@ -33,7 +31,9 @@ export const registerUser = async (request: Request, response: Response) => {
         const existingUser = await UserModel.find({ userName: user.userName });
 
         if (existingUser.length > 0) {
-            response.status(400).json({ message: "Username already exists." });
+            response
+                .status(400)
+                .json({ message: "Der Nutzername existiert bereits." });
             return;
         }
 
@@ -55,12 +55,12 @@ export const registerUser = async (request: Request, response: Response) => {
 
         await newUser.save();
         response.status(201).json({
-            message: "New user registered successfully.",
+            message: "Neuer Nutzer erfolgreich registriert.",
         });
     } catch (error) {
         console.log("error when register new user", error);
         response.status(500).json({
-            message: "Error when register new user.",
+            message: "Fehler beim Registrieren des Nutzers.",
         });
     }
 };
@@ -116,7 +116,7 @@ export const loginUser = async (request: Request, response: Response) => {
             lastLogin: new Date(),
         });
     } catch (error) {
-        console.log("Error when log in user.");
+        console.log("Error when log in user.", error);
         response.status(500).json({ message: "Error when log in user." });
     }
 };
