@@ -34,4 +34,5 @@ export type T_DBTV = {
     notes: string;
     watched: boolean;
     numberOfSeasons: number;
+    numberOfFilms: number;
 };

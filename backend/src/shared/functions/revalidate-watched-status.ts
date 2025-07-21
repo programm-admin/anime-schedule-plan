@@ -1,8 +1,10 @@
+import { TVMovieModel } from "../../models/media/movie.model";
 import {
     TVModel,
     TVSeasonEpisodeModel,
     TVSeasonModel,
 } from "../../models/media/tv.model";
+import { T_DBTVMovie } from "../interfaces-and-types/movie.type";
 import {
     T_DBTVSeason,
     T_DBTVSeasonEpisode,
@@ -18,6 +20,10 @@ const revalidateTVStatus = async (
             seasonUserAccountId: userAccountId,
             seasonTVId: tvId,
         });
+        const allTVMoviesList: T_DBTVMovie[] = await TVMovieModel.find({
+            tvId,
+            userAccountId,
+        });
 
         if (allTVSeasonsList.length < 1) {
             // update current tv object by setting watched status to false
@@ -27,6 +33,7 @@ const revalidateTVStatus = async (
                     $set: {
                         watched: false,
                         numberOfSeasons: 0,
+                        numberOfFilms: allTVMoviesList.length,
                     },
                 }
             );
@@ -35,16 +42,23 @@ const revalidateTVStatus = async (
         }
 
         const areAllSeasonsWatched: boolean =
-            allTVSeasonsList
-                .map((season: T_DBTVSeason) => season.seasonWatched)
-                .filter((watched: boolean) => !watched).length < 1;
+            allTVSeasonsList.filter(
+                (season: T_DBTVSeason) => !season.seasonWatched
+            ).length < 1;
+        const areAllTVMoviesWatched: boolean =
+            allTVMoviesList.length < 1
+                ? true
+                : allTVMoviesList.filter(
+                      (tvMovie: T_DBTVMovie) => !tvMovie.watched
+                  ).length < 1;
 
         const updatedTV = await TVModel.updateOne(
             { userAccountId, id: tvId },
             {
                 $set: {
-                    watched: areAllSeasonsWatched,
+                    watched: areAllSeasonsWatched && areAllTVMoviesWatched,
                     numberOfSeasons: allTVSeasonsList.length,
+                    numberOfFilms: allTVMoviesList.length,
                 },
             }
         );
@@ -83,9 +97,9 @@ const revalidateSeasonStatus = async (
         }
 
         const areAllEpisodesWatched: boolean =
-            allTVSeasonEpisodesList
-                .map((episode: T_DBTVSeasonEpisode) => episode.episodeWatched)
-                .filter((watched: boolean) => !watched).length < 1;
+            allTVSeasonEpisodesList.filter(
+                (episode: T_DBTVSeasonEpisode) => !episode.episodeWatched
+            ).length < 1;
         const updatedSeason = await TVSeasonModel.updateOne(
             { seasonId, seasonUserAccountId: userAccountId },
             {

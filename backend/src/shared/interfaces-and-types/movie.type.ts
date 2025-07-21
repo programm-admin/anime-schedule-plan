@@ -9,3 +9,7 @@ export type T_DBMovie = {
     rating: number;
     notes: string;
 };
+
+export type T_DBTVMovie = T_DBMovie & {
+    tvId: string;
+};

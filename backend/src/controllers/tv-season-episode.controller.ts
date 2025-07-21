@@ -10,6 +10,8 @@ import {
 } from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 import { revalidateTVAndSeason } from "../shared/functions/revalidate-watched-status";
+import { T_DBTVMovie } from "../shared/interfaces-and-types/movie.type";
+import { TVMovieModel } from "../models/media/movie.model";
 
 const updateTVSeasonByEpisode = async (
     tvSeasonEpisode: T_DBTVSeasonEpisode,
@@ -28,9 +30,9 @@ const updateTVSeasonByEpisode = async (
     }
 
     const areAllEpisodesWatched: boolean =
-        allEpisodesOfSeasonList
-            .map((episode: T_DBTVSeasonEpisode) => episode.episodeWatched)
-            .filter((episodeWatched: boolean) => !episodeWatched).length < 1;
+        allEpisodesOfSeasonList.filter(
+            (episode: T_DBTVSeasonEpisode) => !episode.episodeWatched
+        ).length < 1;
 
     const updatedTVSeason = await TVSeasonModel.updateOne(
         {
@@ -124,29 +126,33 @@ export const createTVSeasonEpisode = async (
             return;
         }
 
+        const allTVMoviesList: T_DBTVMovie[] = await TVMovieModel.find({
+            tvId: tvSeasonEpisode.episodeTVId,
+            userAccountId: tvSeasonEpisode.episodeUserAccountId,
+        });
+
         const areAllSeasonsWatched: boolean =
-            allTVSeasonsList
-                .map((season: T_DBTVSeason) => season.seasonWatched)
-                .filter((isWatched: boolean) => !isWatched).length < 1;
-        const updatedTV = await TVModel.updateOne(
+            allTVSeasonsList.filter(
+                (season: T_DBTVSeason) => !season.seasonWatched
+            ).length < 1;
+        const areAllFilmsWatched: boolean =
+            allTVMoviesList.length < 1
+                ? true
+                : allTVMoviesList.filter(
+                      (tvMovie: T_DBTVMovie) => !tvMovie.watched
+                  ).length < 1;
+
+        await TVModel.updateOne(
             {
                 userAccountId: tvSeasonEpisode.episodeUserAccountId,
                 id: tvSeasonEpisode.episodeTVId,
             },
             {
                 $set: {
-                    watched: areAllSeasonsWatched,
+                    watched: areAllSeasonsWatched && areAllFilmsWatched,
                 },
             }
         );
-
-        if (!updatedTV) {
-            response.status(400).json({
-                message:
-                    "Error when updating TV because no TV was found due to updating episode.",
-            });
-            return;
-        }
 
         response.status(201).json({
             message: "Created new TV season episode successfully.",
@@ -177,7 +183,7 @@ export const updateTVSeasonEpisode = async (
         request.body;
 
     try {
-        const updatedTVSeasonEpisode = await TVSeasonEpisodeModel.updateOne(
+        await TVSeasonEpisodeModel.updateOne(
             {
                 episodeId: tvSeasonEpisode.episodeId,
                 episodeUserAccountId: tvSeasonEpisode.episodeUserAccountId,

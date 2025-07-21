@@ -43,8 +43,7 @@ export const createTVSeason = async (request: Request, response: Response) => {
 
         await newTVSeason.save();
 
-        // updating tv watched attribut
-        const updatedTV = await TVModel.updateOne(
+        await TVModel.updateOne(
             {
                 id: tvSeason.seasonTVId,
                 userAccountId: tvSeason.seasonUserAccountId,
@@ -58,13 +57,6 @@ export const createTVSeason = async (request: Request, response: Response) => {
                 },
             }
         );
-
-        if (!updatedTV) {
-            response.status(400).json({
-                message: "Error when updating TV due to update of season.",
-            });
-            return;
-        }
 
         response.status(201).json({
             message: "New TV season registered successfully.",
@@ -91,7 +83,7 @@ export const updateTVSeason = async (request: Request, response: Response) => {
     const { tvSeason }: { tvSeason: T_DBTVSeason } = request.body;
 
     try {
-        const updatedTVSeason = await TVSeasonModel.updateOne(
+        await TVSeasonModel.updateOne(
             { seasonId: tvSeason.seasonId },
             {
                 $set: {
