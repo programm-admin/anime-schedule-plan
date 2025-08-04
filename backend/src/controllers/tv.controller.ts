@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
+import { T_DBTV } from "../shared/interfaces-and-types/tv.type";
 import {
     TVModel,
     TVSeasonEpisodeModel,
