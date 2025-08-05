@@ -8,6 +8,7 @@ export type T_DBMovie = {
     watched: boolean;
     rating: number;
     notes: string;
+    movieSeriesId: string;
 };
 
 export type T_DBTVMovie = T_DBMovie & {

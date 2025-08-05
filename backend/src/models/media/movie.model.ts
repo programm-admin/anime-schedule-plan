@@ -17,6 +17,7 @@ const MovieSchema: Schema<T_MONGO_DBMovie> = new mongoose.Schema({
     watched: { type: Boolean, required: true },
     rating: { type: Number, required: false },
     notes: { type: String, required: false },
+    movieSeriesId: { type: String, required: false },
 });
 
 export const MovieModel = mongoose.model("Movie", MovieSchema);

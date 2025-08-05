@@ -2,6 +2,11 @@ import { Request, Response } from "express";
 import { MovieModel } from "../models/media/movie.model";
 import { T_DBMovie } from "../shared/interfaces-and-types/movie.type";
 import { generateId } from "../shared/functions/generate-id";
+import {
+    getReturnMessage,
+    getReturnMessageForObjectCreation,
+} from "../shared/functions/get-return-messages";
+import { shortenString } from "../shared/functions/shorten-string";
 
 export const createNewMovie = async (request: Request, response: Response) => {
     const { movie }: { movie: T_DBMovie } = request.body;
@@ -26,13 +31,20 @@ export const createNewMovie = async (request: Request, response: Response) => {
             rating: movie.rating,
             notes: movie.notes,
             userAccountId: movie.userAccountId,
+            movieSeriesId: movie.movieSeriesId,
         });
 
         await newMovie.save();
-        response.status(201).json({
-            message: "New movie registered successfully.",
-            movie: { title: newMovie.title, id: newMovie.id },
-        });
+        response
+            .status(201)
+            .json(
+                getReturnMessageForObjectCreation(
+                    `Film ${shortenString(movie.title)} erfolgreich angelegt`,
+                    false,
+                    movie.title,
+                    newMovie.id
+                )
+            );
     } catch (error) {
         console.log("error when insert new movie:", error);
         response.status(500).json({ message: "Error when create new movie." });
@@ -62,17 +74,34 @@ export const updateMovie = async (request: Request, response: Response) => {
         if (!updateMovie) {
             response
                 .status(400)
-                .json({ message: "Error when updating movie." });
+                .json(
+                    getReturnMessage(
+                        `Fehler beim Aktualisieren des Films ${shortenString(
+                            movie.title
+                        )}`,
+                        true
+                    )
+                );
             return;
         }
 
-        response.status(200).json({
-            message: "Updated movie successfully.",
-            movie: updatedMovie,
-        });
+        response
+            .status(200)
+            .json(
+                getReturnMessage(
+                    `Film ${shortenString(
+                        movie.title
+                    )} erfolgreich aktualisiert`,
+                    false
+                )
+            );
     } catch (error) {
         console.log("error when updating movie", error);
-        response.status(500).json({ message: "Error when updating movie." });
+        response
+            .status(500)
+            .json(
+                getReturnMessage("Fehler beim Aktualisieren des Films", true)
+            );
     }
 };
 
@@ -93,13 +122,31 @@ export const deleteMovie = async (request: Request, response: Response) => {
         });
 
         if (!deletedMovie) {
-            response.status(400).json({ message: "Could not delete TV." });
+            response
+                .status(400)
+                .json(
+                    getReturnMessage(
+                        `Fehler beim Löschen des Films ${shortenString(
+                            movie.title
+                        )}`,
+                        true
+                    )
+                );
             return;
         }
 
-        response.status(200).json({ message: "Deleted movie successfully." });
+        response
+            .status(200)
+            .json(
+                getReturnMessage(
+                    `Film ${shortenString(movie.title)} erfolgreich gelöscht`,
+                    false
+                )
+            );
     } catch (error) {
         console.error("error when deleting tv:", error);
-        response.status(500).json({ message: "Error when deleting TV." });
+        response
+            .status(500)
+            .json(getReturnMessage("Fehler beim Löschen des Films", true));
     }
 };

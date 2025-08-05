@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router.post("/new", createNewMovie);
-router.put("/update", updateMovie);
+router.patch("/update", updateMovie);
 router.delete("/delete", deleteMovie);
 
 export default router;

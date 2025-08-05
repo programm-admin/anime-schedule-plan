@@ -48,7 +48,6 @@ export const verifyToken = async (
             return;
         }
 
-
         // check if user exists in DB
         const foundUsers: T_DBUser[] = await UserModel.find({
             authId: decoded.authId,

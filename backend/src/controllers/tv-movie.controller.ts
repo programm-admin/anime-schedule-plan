@@ -5,6 +5,11 @@ import { T_DBTV } from "../shared/interfaces-and-types/tv.type";
 import { TVModel } from "../models/media/tv.model";
 import { revalidateTVAndSeason } from "../shared/functions/revalidate-watched-status";
 import { TVMovieModel } from "../models/media/tv-movie.model";
+import {
+    getReturnMessage,
+    getReturnMessageForObjectCreation,
+} from "../shared/functions/get-return-messages";
+import { shortenString } from "../shared/functions/shorten-string";
 
 export const createTVMovie = async (request: Request, response: Response) => {
     const { tvMovie }: { tvMovie: T_DBTVMovie } = request.body;
@@ -17,9 +22,14 @@ export const createTVMovie = async (request: Request, response: Response) => {
         });
 
         if (foundTVMovieList.length > 0) {
-            response.status(400).json({
-                message: "Dieser Film für diese Serie existiert bereits.",
-            });
+            response
+                .status(400)
+                .json(
+                    getReturnMessage(
+                        "Dieser Film für diese Serie existiert bereits",
+                        true
+                    )
+                );
             return;
         }
 
@@ -45,7 +55,9 @@ export const createTVMovie = async (request: Request, response: Response) => {
         });
 
         if (foundTVList.length < 1) {
-            response.status(400).json({ message: "TV Serie existiert nicht." });
+            response
+                .status(400)
+                .json(getReturnMessage("TV Serie existiert nicht", true));
             return;
         }
 
@@ -64,14 +76,21 @@ export const createTVMovie = async (request: Request, response: Response) => {
             }
         );
 
-        response.status(201).json({
-            message: `Film zur Serie ${foundTVList[0].title} erfolgreich angelegt.`,
-        });
+        response
+            .status(201)
+            .json(
+                getReturnMessageForObjectCreation(
+                    `Film ${shortenString(tvMovie.title)}`,
+                    false,
+                    tvMovie.title,
+                    newTVMovie.id
+                )
+            );
     } catch (error) {
         console.error("error when deleting tv:", error);
-        response.status(500).json({
-            message: `Fehler beim Anlegen des Films "${tvMovie.title}".`,
-        });
+        response
+            .status(500)
+            .json(getReturnMessage("Fehler beim Anlegen des Films", true));
     }
 };
 
@@ -107,21 +126,36 @@ export const updateTVMovie = async (request: Request, response: Response) => {
         );
 
         if (!updatedTVSuccessfully) {
-            response.status(400).json({
-                message:
-                    "Fehler beim Aktualisieren der TV-Serie durch die Aktualisierung des Films.",
-            });
+            response
+                .status(400)
+                .json(
+                    getReturnMessage(
+                        `Fehler beim Aktualisieren der TV-Serie des Films ${shortenString(
+                            tvMovie.title
+                        )}`,
+                        true
+                    )
+                );
             return;
         }
 
-        response.status(200).json({
-            message: `Film "${tvMovie.title}" erfolgreich aktualisiert.`,
-        });
+        response
+            .status(200)
+            .json(
+                getReturnMessage(
+                    `Film ${shortenString(
+                        tvMovie.title
+                    )} erfolgreich aktualisiert`,
+                    false
+                )
+            );
     } catch (error) {
         console.log("error when updating tv movie", error);
-        response.status(500).json({
-            message: `Fehler beim Aktualisieren des Films "${tvMovie.title}".`,
-        });
+        response
+            .status(500)
+            .json(
+                getReturnMessage("Fehler beim Aktualisieren des Films", true)
+            );
     }
 };
 
@@ -138,7 +172,12 @@ export const deleteTVMovie = async (request: Request, response: Response) => {
         if (deletedTVMovie.deletedCount < 1) {
             response
                 .status(400)
-                .json({ message: `Film "${tvMovie.title}" nicht gefunden` });
+                .json(
+                    getReturnMessage(
+                        `Film ${shortenString(tvMovie.title)} nicht gefunden`,
+                        true
+                    )
+                );
             return;
         }
 
@@ -153,17 +192,27 @@ export const deleteTVMovie = async (request: Request, response: Response) => {
         if (!updatedTVSuccessfully) {
             response
                 .status(400)
-                .json({ message: `Film ${tvMovie.title}" nicht gefunden` });
+                .json(
+                    getReturnMessage(
+                        `Film ${shortenString(tvMovie.title)} nicht gefunden`,
+                        true
+                    )
+                );
             return;
         }
 
         response
             .status(200)
-            .json({ message: `Film "${tvMovie.title}" erfolgreich gelöscht` });
+            .json(
+                getReturnMessage(
+                    `Film ${shortenString(tvMovie.title)} erfolgreich gelöscht`,
+                    false
+                )
+            );
     } catch (error) {
         console.error("error when deleting tv movie");
-        response.status(500).json({
-            message: `Fehler beim Löschen des Films "${tvMovie.title}".`,
-        });
+        response
+            .status(500)
+            .json(getReturnMessage("Fehler beim Löschen des Films", true));
     }
 };
