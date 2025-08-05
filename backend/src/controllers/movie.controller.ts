@@ -7,6 +7,8 @@ import {
     getReturnMessageForObjectCreation,
 } from "../shared/functions/get-return-messages";
 import { shortenString } from "../shared/functions/shorten-string";
+import { MovieSeriesModel } from "../models/media/movie-series.model";
+import { getMovieSeriesWatchedState } from "../shared/functions/get-movie-series-watched";
 
 export const createNewMovie = async (request: Request, response: Response) => {
     const { movie }: { movie: T_DBMovie } = request.body;
@@ -71,7 +73,7 @@ export const updateMovie = async (request: Request, response: Response) => {
             { new: true }
         );
 
-        if (!updateMovie) {
+        if (!updatedMovie) {
             response
                 .status(400)
                 .json(
@@ -83,6 +85,21 @@ export const updateMovie = async (request: Request, response: Response) => {
                     )
                 );
             return;
+        }
+
+        if (movie.movieSeriesId && movie.movieSeriesId.trim().length > 0) {
+            // if movie is part of a movie series (if it has an id of a movie series) -> update movie series
+            await MovieSeriesModel.updateOne(
+                { id: movie.movieSeriesId, userAccountId: movie.userAccountId },
+                {
+                    $set: {
+                        watched: await getMovieSeriesWatchedState(
+                            movie.userAccountId,
+                            movie.movieSeriesId
+                        ),
+                    },
+                }
+            );
         }
 
         response
@@ -112,7 +129,7 @@ export const updateMovie = async (request: Request, response: Response) => {
  * @returns void
  */
 export const deleteMovie = async (request: Request, response: Response) => {
-    const { token, movie }: { token: string; movie: T_DBMovie } = request.body;
+    const { movie }: { movie: T_DBMovie } = request.body;
 
     try {
         // delete movie
