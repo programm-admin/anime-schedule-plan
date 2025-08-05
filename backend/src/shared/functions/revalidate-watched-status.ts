@@ -1,4 +1,4 @@
-import { TVMovieModel } from "../../models/media/movie.model";
+import { TVMovieModel } from "../../models/media/tv-movie.model";
 import {
     TVModel,
     TVSeasonEpisodeModel,

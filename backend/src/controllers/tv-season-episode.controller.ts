@@ -11,7 +11,8 @@ import {
 import { generateId } from "../shared/functions/generate-id";
 import { revalidateTVAndSeason } from "../shared/functions/revalidate-watched-status";
 import { T_DBTVMovie } from "../shared/interfaces-and-types/movie.type";
-import { TVMovieModel } from "../models/media/movie.model";
+import { TVMovieModel } from "../models/media/tv-movie.model";
+
 
 const updateTVSeasonByEpisode = async (
     tvSeasonEpisode: T_DBTVSeasonEpisode,
