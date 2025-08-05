@@ -37,6 +37,22 @@ export const createNewMovie = async (request: Request, response: Response) => {
         });
 
         await newMovie.save();
+
+        if (movie.movieSeriesId && movie.movieSeriesId.trim().length > 0) {
+            // if new movie is part of a movie series -> update movie series watched state
+            await MovieSeriesModel.updateOne(
+                { id: movie.movieSeriesId, userAccountId: movie.userAccountId },
+                {
+                    $set: {
+                        watched: await getMovieSeriesWatchedState(
+                            movie.userAccountId,
+                            movie.movieSeriesId
+                        ),
+                    },
+                }
+            );
+        }
+
         response
             .status(201)
             .json(
