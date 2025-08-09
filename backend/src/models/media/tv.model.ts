@@ -48,6 +48,7 @@ const TVSchema: Schema<T_MONGO_DBTV> = new mongoose.Schema({
     notes: { type: String, required: false },
     watched: { type: Boolean, required: true },
     numberOfSeasons: { type: Number, required: true },
+    numberOfFilms: { type: Number, required: true },
 });
 
 export const TVModel = mongoose.model("TV", TVSchema);

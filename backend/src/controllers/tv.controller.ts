@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { T_DBTV, T_DBTVSeason } from "../shared/interfaces-and-types/tv.type";
+import { T_DBTV } from "../shared/interfaces-and-types/tv.type";
 import {
     TVModel,
     TVSeasonEpisodeModel,
@@ -7,7 +7,6 @@ import {
 } from "../models/media/tv.model";
 import { generateId } from "../shared/functions/generate-id";
 import { error } from "console";
-
 /**
  * Function for creating new TV object in DB.
  * @param request express.Request
@@ -100,7 +99,7 @@ export const deleteTV = async (request: Request, response: Response) => {
             userAccountId: tv.userAccountId,
         });
 
-        if (!deletedTV) {
+        if (deletedTV.deletedCount < 1) {
             response.status(400).json({ message: "Could not delete TV." });
             return;
         }
