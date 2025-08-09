@@ -21,6 +21,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 export class HeaderMainComponent extends COMPBase implements OnInit {
     public isUserLoggedIn: boolean = false;
     public menuItems: MenuItem[] | undefined;
+    public createMenuItems: MenuItem[] | undefined;
     public isUserLoading: boolean = false;
 
     constructor(
@@ -53,6 +54,18 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
                 command: () =>
                     this.navigateToPage(APP_ROUTES['USER_LOGIN'].url),
                 icon: 'pi pi-sign-in',
+            },
+        ];
+        this.createMenuItems = [
+            {
+                label: APP_ROUTES['CREATE_MOVIE'].name,
+                command: () =>
+                    this.navigateToPage(APP_ROUTES['CREATE_MOVIE'].url),
+            },
+            {
+                label: APP_ROUTES['CREATE_MOVIE_SERIES'].name,
+                command: () =>
+                    this.navigateToPage(APP_ROUTES['CREATE_MOVIE_SERIES'].url),
             },
         ];
     }

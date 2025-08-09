@@ -2,6 +2,18 @@
     <div class="leftSideDIV">
         <button class="headerButton headerButtonLeft">Suche</button>
         <button class="headerButton headerButtonLeft">Meine Pläne</button>
+
+        @if (!isUserLoading && isUserLoggedIn) {
+        <p-menu #creationMenu [model]="createMenuItems" [popup]="true" />
+        <button
+            class="headerButton headerButtonLeft"
+            pTooltip="Erstellen"
+            (click)="creationMenu.toggle($event)"
+        >
+            <span class="pi pi-plus"></span>
+        </button>
+        }
+
         <span class="headerButtonDivider"></span>
     </div>
     <p-menu #menu [model]="menuItems" [popup]="true" />

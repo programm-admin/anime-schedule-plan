@@ -1,9 +1,7 @@
 import { Routes } from '@angular/router';
 import { StartPageComponent } from './presentation/routes/start-page.component/start-page.component';
-import { COMPRegisterPage } from './presentation/routes/comp-register-page/comp-register-page';
 import { APP_ROUTES } from './shared/constants/app-routes';
 import { COMPLoginPage } from './presentation/routes/comp-login-page/comp-login-page';
-import { COMPUserStartPage } from './presentation/routes/comp-user-start-page/comp-user-start-page';
 import { authGuard } from './presentation/guards/auth-guard/auth-guard';
 
 export const routes: Routes = [
@@ -28,5 +26,12 @@ export const routes: Routes = [
                 (UserRoutesModule) => UserRoutesModule.UserRoutesModule
             ),
         canActivate: [authGuard],
+    },
+    {
+        path: APP_ROUTES['MOVIE'].url,
+        loadChildren: () =>
+            import(
+                './presentation/routes/movie-routes/movie-routes-module'
+            ).then((MovieRoutesModule) => MovieRoutesModule.MovieRoutesModule),
     },
 ];

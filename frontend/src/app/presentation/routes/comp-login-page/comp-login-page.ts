@@ -23,7 +23,6 @@ import { COMPBase } from '../../_components/comp-base/comp-base';
 import { takeUntil } from 'rxjs';
 import { MessageModule } from 'primeng/message';
 import { APP_ROUTES } from '../../../shared/constants/app-routes';
-import { isPlatformBrowser } from '@angular/common';
 import {
     KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     KEY_USER_NAME_LOCAL_STORAGE,
