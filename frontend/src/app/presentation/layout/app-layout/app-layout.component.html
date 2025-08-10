@@ -8,7 +8,10 @@
         <img
             src="Japan 16.jpg"
             alt="Bild der Startseite"
-            class="backgroudIMG"
+            [ngClass]="[
+                'backgroundIMG',
+                isUrlForBigPicture ? 'backgroudIMGTall' : 'backgroudIMGSmall'
+            ]"
         />
         <div class="appContent">
             <router-outlet />

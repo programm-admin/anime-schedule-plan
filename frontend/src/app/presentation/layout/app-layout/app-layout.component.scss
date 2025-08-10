@@ -37,10 +37,17 @@
     overflow: hidden;
 }
 
-.backgroudIMG {
+.backgroundIMG {
     width: 100%;
-    height: 15rem;
     object-fit: cover;
     object-position: center;
     margin: 0;
+}
+
+.backgroudIMGTall {
+    height: 15rem;
+}
+
+.backgroudIMGSmall {
+    height: 8rem;
 }

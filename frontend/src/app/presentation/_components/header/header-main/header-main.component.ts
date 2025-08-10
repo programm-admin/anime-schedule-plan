@@ -60,7 +60,11 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
             {
                 label: APP_ROUTES['CREATE_MOVIE'].name,
                 command: () =>
-                    this.navigateToPage(APP_ROUTES['CREATE_MOVIE'].url),
+                    this.navigateToPage(
+                        APP_ROUTES['MOVIE'].url +
+                            '/' +
+                            APP_ROUTES['CREATE_MOVIE'].url
+                    ),
             },
             {
                 label: APP_ROUTES['CREATE_MOVIE_SERIES'].name,
