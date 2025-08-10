@@ -3,7 +3,7 @@ import {
     IT_USER_REPOSITORY,
     TF_UserRepository,
 } from '../../domain/user.repository';
-import { TF_User } from '../../models/user.model';
+import { TF_User, TF_UserFull } from '../../models/user.model';
 
 @Injectable()
 export class UC_User_GetUser {
@@ -12,7 +12,7 @@ export class UC_User_GetUser {
         private readonly userRepository: TF_UserRepository
     ) {}
 
-    public execute = (): TF_User | null => {
+    public execute = (): TF_UserFull => {
         return this.userRepository.getUser();
     };
 }

@@ -20,4 +20,9 @@ export const APP_ROUTES: { [key: string]: TF_AppRoute } = {
         url: 'create',
         isVisible: true,
     },
+    MOVIE_DETAILS: {
+        name: 'Filmdetails',
+        url: ':id',
+        isVisible: false,
+    },
 };

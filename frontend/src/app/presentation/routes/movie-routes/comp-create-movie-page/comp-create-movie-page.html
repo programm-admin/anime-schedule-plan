@@ -5,3 +5,8 @@
     absenden.
 </p>
 
+<app-comp-movie-form
+    [inpMovieSeriesId]="''"
+    (outSubmitForm)="submitForm($event)"
+    (outCancelForm)="cancelForm()"
+/>

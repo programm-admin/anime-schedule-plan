@@ -133,6 +133,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                         userName: this.loginForm?.get('userName')?.value,
                         userToken: response.token,
                         userLastLogin: response.lastLogin,
+                        userAccountId: response.userAccountId,
                     });
 
                     this.isFormSubmitted = false;

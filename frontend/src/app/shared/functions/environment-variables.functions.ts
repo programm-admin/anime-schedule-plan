@@ -6,6 +6,7 @@ import {
 import { ENVIRONMENT_VARIABLES } from '../../../../environment';
 import { TF_UserFull } from '../../core/models/user.model';
 import {
+    KEY_USER_ACCOUNT_ID,
     KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     KEY_USER_NAME_LOCAL_STORAGE,
     KEY_USER_TOKEN_LOCAL_STORAGE,
@@ -68,6 +69,8 @@ export const getUser = (): TF_UserFull => {
     const userToken: string | null = localStorage.getItem(
         KEY_USER_TOKEN_LOCAL_STORAGE
     );
+    const userAccountId: string | null =
+        localStorage.getItem(KEY_USER_ACCOUNT_ID);
     const userLastLogin: string | null = localStorage.getItem(
         KEY_USER_LAST_LOGIN_LOCAL_STORAGE
     );
@@ -75,9 +78,11 @@ export const getUser = (): TF_UserFull => {
     if (
         !userName ||
         !userToken ||
+        !userAccountId ||
         !userLastLogin ||
         (userName && !userName.trim()) ||
         (userToken && !userToken.trim()) ||
+        (userAccountId && !userAccountId.trim()) ||
         (userLastLogin && !userLastLogin.trim()) ||
         (userLastLogin &&
             userLastLogin.trim().length > 0 &&
@@ -90,6 +95,7 @@ export const getUser = (): TF_UserFull => {
         user: {
             userName,
             userToken,
+            userAccountId,
             userLastLogin: new Date(userLastLogin),
         },
         status: 'finished',

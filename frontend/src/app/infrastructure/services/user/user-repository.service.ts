@@ -8,6 +8,7 @@ import { TF_RegisterUser } from '../../../shared/types/user/register-user.type';
 import { TF_RequestResponseUserLogin } from '../../../shared/types/user/response-user-login.type';
 import { isPlatformBrowser } from '@angular/common';
 import {
+    KEY_USER_ACCOUNT_ID,
     KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     KEY_USER_NAME_LOCAL_STORAGE,
     KEY_USER_TOKEN_LOCAL_STORAGE,
@@ -163,6 +164,8 @@ export class INFREP_User implements TF_UserRepository {
             const userToken: string | null = localStorage.getItem(
                 KEY_USER_TOKEN_LOCAL_STORAGE
             );
+            const userAccountId: string | null =
+                localStorage.getItem(KEY_USER_ACCOUNT_ID);
             const userLastLogin: string | null = localStorage.getItem(
                 KEY_USER_LAST_LOGIN_LOCAL_STORAGE
             );
@@ -170,9 +173,11 @@ export class INFREP_User implements TF_UserRepository {
             if (
                 !userName ||
                 !userToken ||
+                !userAccountId ||
                 !userLastLogin ||
                 (userName && !userName.trim()) ||
                 (userToken && !userToken.trim()) ||
+                (userAccountId && !userAccountId.trim()) ||
                 (userLastLogin && !userLastLogin.trim()) ||
                 (userLastLogin &&
                     userLastLogin.trim().length > 0 &&
@@ -185,6 +190,7 @@ export class INFREP_User implements TF_UserRepository {
                 user: {
                     userName,
                     userToken,
+                    userAccountId,
                     userLastLogin: new Date(userLastLogin),
                 },
                 status: 'finished',

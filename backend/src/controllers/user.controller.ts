@@ -114,6 +114,7 @@ export const loginUser = async (request: Request, response: Response) => {
             message: "Login successful.",
             token,
             lastLogin: new Date(),
+            userAccountId: foundUser.accountId,
         });
     } catch (error) {
         console.log("Error when log in user.", error);

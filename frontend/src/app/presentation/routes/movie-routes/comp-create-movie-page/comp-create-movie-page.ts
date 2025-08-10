@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMPBase } from '../../../_components/comp-base/comp-base';
+import { COMPMovieForm } from "../../../_components/comp-movie-form/comp-movie-form";
+import { TF_Movie } from '../../../../core/models/movie.model';
 
 @Component({
     selector: 'app-comp-create-movie-page',
-    imports: [],
+    imports: [COMPMovieForm],
     templateUrl: './comp-create-movie-page.html',
     styleUrl: './comp-create-movie-page.scss',
 })
@@ -28,4 +30,11 @@ export class COMPCreateMoviePage extends COMPBase implements OnInit {
             notes: '',
         });
     }
+
+
+    public submitForm = (movie: TF_Movie) => {
+
+    }
+
+    public cancelForm = () => {}
 }
