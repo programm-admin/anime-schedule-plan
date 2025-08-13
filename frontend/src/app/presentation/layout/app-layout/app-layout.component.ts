@@ -29,6 +29,4 @@ export class AppLayoutComponent extends COMPBase implements OnInit {
                     event.urlAfterRedirects.trim() === '/';
             });
     }
-
-
 }

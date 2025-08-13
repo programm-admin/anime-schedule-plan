@@ -170,6 +170,7 @@ export class INFREP_User implements TF_UserRepository {
                 KEY_USER_LAST_LOGIN_LOCAL_STORAGE
             );
 
+
             if (
                 !userName ||
                 !userToken ||

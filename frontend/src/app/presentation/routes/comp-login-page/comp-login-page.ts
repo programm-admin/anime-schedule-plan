@@ -24,6 +24,7 @@ import { takeUntil } from 'rxjs';
 import { MessageModule } from 'primeng/message';
 import { APP_ROUTES } from '../../../shared/constants/app-routes';
 import {
+    KEY_USER_ACCOUNT_ID,
     KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     KEY_USER_NAME_LOCAL_STORAGE,
     KEY_USER_TOKEN_LOCAL_STORAGE,
@@ -118,6 +119,10 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                     this.setItemUseCase.execute(
                         KEY_USER_TOKEN_LOCAL_STORAGE,
                         response.token
+                    );
+                    this.setItemUseCase.execute(
+                        KEY_USER_ACCOUNT_ID,
+                        response.userAccountId
                     );
                     this.setItemUseCase.execute(
                         KEY_USER_LAST_LOGIN_LOCAL_STORAGE,

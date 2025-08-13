@@ -25,7 +25,6 @@ export const getAPIKey = (): string | undefined => {
 export const getAPIRoute = (
     routeString: TF_ApiUserRouteInput
 ): string | null => {
-    console.log('[get api route] env', ENVIRONMENT_VARIABLES.API_URL.trim());
     if (!ENVIRONMENT_VARIABLES.API_URL.trim()) return null;
 
     const splittedRoute: string[] = routeString.split('-');
