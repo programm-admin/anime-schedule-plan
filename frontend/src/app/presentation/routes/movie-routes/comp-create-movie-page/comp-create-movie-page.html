@@ -7,6 +7,7 @@
 
 <app-comp-movie-form
     [inpMovieSeriesId]="''"
+    [inpIsDisabled]="isLoading"
     (outSubmitForm)="submitForm($event)"
     (outCancelForm)="cancelForm()"
 />

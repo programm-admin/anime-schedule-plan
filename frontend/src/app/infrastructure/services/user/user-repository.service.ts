@@ -117,6 +117,7 @@ export class INFREP_User implements TF_UserRepository {
 
         if (isPlatformBrowser(this.platformId)) {
             localStorage.clear();
+            this.userSubject.next({ user: null, status: 'finished' });
             return true;
         }
 
@@ -169,7 +170,6 @@ export class INFREP_User implements TF_UserRepository {
             const userLastLogin: string | null = localStorage.getItem(
                 KEY_USER_LAST_LOGIN_LOCAL_STORAGE
             );
-
 
             if (
                 !userName ||

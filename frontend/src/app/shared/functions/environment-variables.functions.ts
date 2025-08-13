@@ -48,7 +48,7 @@ export const getHTTPHeader = (
         withToken
             ? {
                   'Content-Type': 'application/json',
-                  Authorization: `Bearer: ${token}`,
+                  Authorization: `Bearer ${token}`,
               }
             : {
                   'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const getHTTPHeader = (
 
     return new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer: ${token}`,
+        Authorization: `Bearer ${token}`,
     });
 };
 

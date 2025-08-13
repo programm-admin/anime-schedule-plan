@@ -99,7 +99,7 @@ export const loginUser = async (request: Request, response: Response) => {
 
         const token: string | null = createUserToken({
             userName: user.userName,
-            userType: user.userType,
+            userType: foundUser.userType,
             authId: foundUser.authId,
         });
 

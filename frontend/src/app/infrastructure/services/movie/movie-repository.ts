@@ -36,7 +36,7 @@ export class INFREP_Movie implements TF_MovieRepository {
         this.createMovie$ = this.http
             .post<TF_MediaReturnMessageForObjectCreation>(
                 requestData.apiUrl,
-                movie,
+                { movie },
                 { headers: requestData.httpHeader }
             )
             .pipe(shareReplay({ bufferSize: 1, refCount: true }));

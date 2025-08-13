@@ -19,7 +19,7 @@ export const createNewMovie = async (request: Request, response: Response) => {
         });
 
         if (foundMovies.length > 0) {
-            response.status(400).json({ message: "Film already exists." });
+            response.status(400).json({ message: "Film existiert bereits." });
             return;
         }
 

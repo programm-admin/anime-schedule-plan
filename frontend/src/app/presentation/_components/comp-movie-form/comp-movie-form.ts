@@ -45,6 +45,7 @@ import { TextareaModule } from 'primeng/textarea';
 export class COMPMovieForm extends COMPBase implements OnInit {
     // input variables
     public inpMovieSeriesId: InputSignal<string> = input<string>('');
+    public inpIsDisabled: InputSignal<boolean> = input.required<boolean>();
 
     // output variables
     public outSubmitForm: OutputEmitterRef<TF_Movie> = output<TF_Movie>();

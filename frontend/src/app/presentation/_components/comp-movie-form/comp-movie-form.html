@@ -128,11 +128,17 @@
                 </p-float-label>
             </div>
 
-            <p-button type="submit" label="Film anlegen" icon="pi pi-check" />
+            <p-button
+                type="submit"
+                label="Film anlegen"
+                icon="pi pi-check"
+                [disabled]="inpIsDisabled()"
+            />
             <p-button
                 label="Abbrechen"
                 icon="pi pi-times"
                 severity="secondary"
+                [disabled]="inpIsDisabled()"
                 (onClick)="cancelForm()"
             />
         </form>
