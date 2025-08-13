@@ -10,13 +10,15 @@ import { CommonModule } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import { COMPBase } from '../../comp-base/comp-base';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { UC_Navigation_NavigateToPage } from '../../../../core/use-cases/navigation/navigate-to-page.use-case';
+import { UC_Navigation_NavigateToStartPage } from '../../../../core/use-cases/navigation/navigate-to-start-page.use-case';
 
 @Component({
     selector: 'app-header-main',
     imports: [TooltipModule, Menu, CommonModule, ProgressSpinnerModule],
     templateUrl: './header-main.component.html',
     styleUrl: './header-main.component.scss',
-    providers: [UC_User_GetUserSubject],
+    providers: [UC_User_GetUserSubject, UC_Navigation_NavigateToPage],
 })
 export class HeaderMainComponent extends COMPBase implements OnInit {
     public isUserLoggedIn: boolean = false;
@@ -26,7 +28,7 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
 
     constructor(
         private readonly getUserSubjectUseCase: UC_User_GetUserSubject,
-        private readonly router: Router
+        private readonly navigateToPageUseCase: UC_Navigation_NavigateToPage
     ) {
         super();
     }
@@ -75,6 +77,6 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
     }
 
     private navigateToPage = (pageUrl: string) => {
-        this.router.navigateByUrl(`/${pageUrl}`);
+        this.navigateToPageUseCase.execute(pageUrl);
     };
 }
