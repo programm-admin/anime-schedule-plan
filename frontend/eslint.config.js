@@ -2,6 +2,8 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
+const prettier = require("eslint-plugin-prettier");
+const eslintConfigPrettier = require("eslint-config-prettier");
 
 module.exports = tseslint.config(
     {
@@ -11,28 +13,22 @@ module.exports = tseslint.config(
             ...tseslint.configs.recommended,
             ...tseslint.configs.stylistic,
             ...angular.configs.tsRecommended,
-            "plugin:prettier/recommended",
+            eslintConfigPrettier, // ersetzt "eslint-config-prettier"
         ],
+        plugins: {
+            prettier, // aktiviert eslint-plugin-prettier
+        },
         processor: angular.processInlineTemplates,
         rules: {
+            "prettier/prettier": "error", // Prettier-Fehler als ESLint-Fehler
             "@angular-eslint/directive-selector": [
                 "error",
-                {
-                    type: "attribute",
-                    prefix: "app",
-                    style: "camelCase",
-                },
+                { type: "attribute", prefix: "app", style: "camelCase" },
             ],
             "@angular-eslint/component-selector": [
                 "error",
-                {
-                    type: "element",
-                    prefix: "app",
-                    style: "kebab-case",
-                },
+                { type: "element", prefix: "app", style: "kebab-case" },
             ],
-
-            // ✅ Eigene Overrides
             "@typescript-eslint/consistent-type-definitions": "off",
             "@typescript-eslint/no-inferrable-types": "off",
             "@angular-eslint/prefer-inject": "off",
@@ -44,8 +40,11 @@ module.exports = tseslint.config(
         extends: [
             ...angular.configs.templateRecommended,
             ...angular.configs.templateAccessibility,
-            "plugin:prettier/recommended",
+            eslintConfigPrettier,
         ],
-        rules: {},
+        plugins: { prettier },
+        rules: {
+            "prettier/prettier": "error",
+        },
     },
 );
