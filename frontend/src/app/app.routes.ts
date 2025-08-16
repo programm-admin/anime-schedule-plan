@@ -33,5 +33,6 @@ export const routes: Routes = [
             import(
                 './presentation/routes/movie-routes/movie-routes-module'
             ).then((MovieRoutesModule) => MovieRoutesModule.MovieRoutesModule),
+        canActivate: [authGuard],
     },
 ];

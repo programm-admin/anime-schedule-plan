@@ -5,7 +5,7 @@ import {
 } from '../../domain/message.repository';
 import { TF_MessageInput } from '../../../shared/types/message-input.type';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UC_Message_ShowErrorMessage {
     constructor(
         @Inject(IT_MESSAGE_REPOSITORY)

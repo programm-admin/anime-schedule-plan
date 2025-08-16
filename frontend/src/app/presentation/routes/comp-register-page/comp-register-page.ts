@@ -44,11 +44,7 @@ import { takeUntil } from 'rxjs';
     ],
     templateUrl: './comp-register-page.html',
     styleUrl: './comp-register-page.scss',
-    providers: [
-        UC_User_RegisterUser,
-        UC_Message_ShowSuccessMessage,
-        UC_Message_ShowErrorMessage,
-    ],
+    providers: [UC_User_RegisterUser, UC_Message_ShowSuccessMessage],
 })
 export class COMPRegisterPage extends COMPBase implements OnInit {
     public registerForm: FormGroup | null = null;

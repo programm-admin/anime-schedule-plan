@@ -20,7 +20,6 @@ import { APP_ROUTES } from '../../../../shared/constants/app-routes';
     styleUrl: './comp-create-movie-page.scss',
     providers: [
         UC_Message_ShowSuccessMessage,
-        UC_Message_ShowErrorMessage,
         UC_Movie_CreateMovie,
         UC_Navigation_NavigateToStartPage,
         UC_Navigation_NavigateToPage,

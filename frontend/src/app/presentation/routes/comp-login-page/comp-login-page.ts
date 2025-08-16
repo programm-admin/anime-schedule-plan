@@ -47,7 +47,6 @@ import { UC_User_SetUserSubject } from '../../../core/use-cases/user/set-user-su
     providers: [
         UC_User_LoginUser,
         UC_Message_ShowSuccessMessage,
-        UC_Message_ShowErrorMessage,
         UC_LocalStorage_SetItem,
         UC_User_SetUserSubject,
     ],
