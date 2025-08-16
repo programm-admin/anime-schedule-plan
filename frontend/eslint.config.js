@@ -40,11 +40,7 @@ module.exports = tseslint.config(
         extends: [
             ...angular.configs.templateRecommended,
             ...angular.configs.templateAccessibility,
-            eslintConfigPrettier,
         ],
-        plugins: { prettier },
-        rules: {
-            "prettier/prettier": "error",
-        },
+        rules: {},
     },
 );
