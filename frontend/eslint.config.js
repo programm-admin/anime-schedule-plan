@@ -11,10 +11,10 @@ module.exports = tseslint.config(
             ...tseslint.configs.recommended,
             ...tseslint.configs.stylistic,
             ...angular.configs.tsRecommended,
+            "plugin:prettier/recommended",
         ],
         processor: angular.processInlineTemplates,
         rules: {
-            // Angular-spezifisch
             "@angular-eslint/directive-selector": [
                 "error",
                 {
@@ -32,10 +32,11 @@ module.exports = tseslint.config(
                 },
             ],
 
-            // ⚡️ Deaktivierungen / Anpassungen
-            "@typescript-eslint/consistent-type-definitions": "off", // erlaubt `type`
-            "@typescript-eslint/no-inferrable-types": "off", // erlaubt `let x: string = 'abc'`
-            "@angular-eslint/prefer-inject": "off", // erlaubt Constructor Injection
+            // ✅ Eigene Overrides
+            "@typescript-eslint/consistent-type-definitions": "off",
+            "@typescript-eslint/no-inferrable-types": "off",
+            "@angular-eslint/prefer-inject": "off",
+            "@typescript-eslint/consistent-indexed-object-style": "off",
         },
     },
     {
@@ -43,7 +44,8 @@ module.exports = tseslint.config(
         extends: [
             ...angular.configs.templateRecommended,
             ...angular.configs.templateAccessibility,
+            "plugin:prettier/recommended",
         ],
         rules: {},
-    }
+    },
 );
