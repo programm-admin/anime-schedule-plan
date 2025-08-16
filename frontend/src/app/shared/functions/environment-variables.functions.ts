@@ -55,10 +55,7 @@ export const getHTTPHeader = (
               }
     );
 
-    return new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-    });
+    return headers;
 };
 
 export const getUser = (): TF_UserFull => {

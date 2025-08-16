@@ -147,7 +147,7 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
 
                     this.isFormSubmitted = false;
                 },
-                error: (err: any) => {
+                error: (err) => {
                     this.showErrorMessageUseCase.execute({
                         summary: 'Fehler beim Registrieren des Nutzers',
                         detail: err.error.message ?? JSON.stringify(err.error),

@@ -4,14 +4,12 @@ import { UC_User_GetUserSubject } from '../../../../core/use-cases/user/get-user
 import { TF_UserFull } from '../../../../core/models/user.model';
 import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
-import { Router } from '@angular/router';
 import { APP_ROUTES } from '../../../../shared/constants/app-routes';
 import { CommonModule } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import { COMPBase } from '../../comp-base/comp-base';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UC_Navigation_NavigateToPage } from '../../../../core/use-cases/navigation/navigate-to-page.use-case';
-import { UC_Navigation_NavigateToStartPage } from '../../../../core/use-cases/navigation/navigate-to-start-page.use-case';
 
 @Component({
     selector: 'app-header-main',

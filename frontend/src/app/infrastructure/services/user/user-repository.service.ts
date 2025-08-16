@@ -1,4 +1,4 @@
-import { computed, Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { TF_UserRepository } from '../../../core/domain/user.repository';
 import { BehaviorSubject, EMPTY, map, Observable, tap } from 'rxjs';
 import { TF_User, TF_UserFull } from '../../../core/models/user.model';
@@ -33,7 +33,7 @@ export class INFREP_User implements TF_UserRepository {
     private userSubject$!: Observable<TF_UserFull>;
 
     constructor(
-        @Inject(PLATFORM_ID) private readonly platformId: Object,
+        @Inject(PLATFORM_ID) private readonly platformId: object,
         private http: HttpClient
     ) {
         this.userSubject = new BehaviorSubject<TF_UserFull>({

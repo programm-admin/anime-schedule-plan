@@ -3,7 +3,7 @@ import {
     IT_USER_REPOSITORY,
     TF_UserRepository,
 } from '../../domain/user.repository';
-import { TF_User, TF_UserFull } from '../../models/user.model';
+import { TF_UserFull } from '../../models/user.model';
 
 @Injectable()
 export class UC_User_GetUser {

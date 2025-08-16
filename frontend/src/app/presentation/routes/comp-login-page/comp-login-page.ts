@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -64,8 +64,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
         private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
         private readonly setUserSubjectUseCase: UC_User_SetUserSubject,
         private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage,
-        private readonly setItemUseCase: UC_LocalStorage_SetItem,
-        @Inject(PLATFORM_ID) private readonly platformId: Object
+        private readonly setItemUseCase: UC_LocalStorage_SetItem
     ) {
         super();
     }
@@ -143,7 +142,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                     this.isFormSubmitted = false;
                     this.router.navigateByUrl(APP_ROUTES['START'].url);
                 },
-                error: (err: any) => {
+                error: (err) => {
                     this.showErrorMessageUseCase.execute({
                         summary: 'Fehler beim Einloggen',
                         detail: err.error.message ?? JSON.stringify(err.error),

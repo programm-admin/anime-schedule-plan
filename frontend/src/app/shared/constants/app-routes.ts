@@ -1,6 +1,6 @@
 import { TF_AppRoute } from '../types/app-route.type';
 
-export const APP_ROUTES: { [key: string]: TF_AppRoute } = {
+export const APP_ROUTES: Record<string, TF_AppRoute> = {
     START: { name: 'Startseite', url: '', isVisible: false },
     USER_REGISTER: {
         name: 'Nutzer registrieren',

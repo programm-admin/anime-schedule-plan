@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class INFREP_Message implements TF_MessageRepository {
     constructor(
         private readonly messageService: MessageService,
-        @Inject(PLATFORM_ID) private readonly platformId: Object
+        @Inject(PLATFORM_ID) private readonly platformId: object
     ) {}
 
     private showMessageBasedOnType = (input: TF_MessageInputFull) => {
