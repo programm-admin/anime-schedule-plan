@@ -9,7 +9,7 @@ import { TF_User } from '../../models/user.model';
 export class UC_User_SetUserSubject {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (data: TF_User) => {

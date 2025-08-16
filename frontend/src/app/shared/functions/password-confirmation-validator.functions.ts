@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 
 export const passwordsMatchValidator: ValidatorFn = (
-    formGroup: AbstractControl
+    formGroup: AbstractControl,
 ): ValidationErrors | null => {
     const group = formGroup as FormGroup;
     const password = group.get('password');

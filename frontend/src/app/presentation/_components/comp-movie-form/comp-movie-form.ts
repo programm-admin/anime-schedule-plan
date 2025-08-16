@@ -60,7 +60,7 @@ export class COMPMovieForm extends COMPBase implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private readonly getUserUseCase: UC_User_GetUser
+        private readonly getUserUseCase: UC_User_GetUser,
     ) {
         super();
     }

@@ -11,11 +11,11 @@ import { Observable } from 'rxjs';
 export class UC_User_LoginUser {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (
-        loginData: TF_LoginUser
+        loginData: TF_LoginUser,
     ): Observable<TF_RequestResponseUserLogin> => {
         return this.userRepository.loginUser(loginData);
     };

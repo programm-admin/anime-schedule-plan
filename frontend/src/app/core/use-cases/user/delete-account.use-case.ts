@@ -11,11 +11,11 @@ import { Observable } from 'rxjs';
 export class UC_User_DeleteAccount {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (
-        deleteData: TF_RegisterUser
+        deleteData: TF_RegisterUser,
     ): Observable<TF_RequestResponseMessage> => {
         return this.userRepository.deleteUser(deleteData);
     };

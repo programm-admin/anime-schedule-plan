@@ -11,7 +11,7 @@ import { TF_MediaReturnMessage } from '../../../shared/types/media/media-return.
 export class UC_Movie_DeleteMovie {
     constructor(
         @Inject(IT_MOVIE_REPOSITORY)
-        private readonly movieRepository: TF_MovieRepository
+        private readonly movieRepository: TF_MovieRepository,
     ) {}
 
     public execute = (movie: TF_Movie): Observable<TF_MediaReturnMessage> => {

@@ -64,7 +64,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
         private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
         private readonly setUserSubjectUseCase: UC_User_SetUserSubject,
         private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage,
-        private readonly setItemUseCase: UC_LocalStorage_SetItem
+        private readonly setItemUseCase: UC_LocalStorage_SetItem,
     ) {
         super();
     }
@@ -83,7 +83,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                 [
                     Validators.required,
                     Validators.minLength(
-                        this.INPUT_VARIABLES_LOCAL.passwordLength
+                        this.INPUT_VARIABLES_LOCAL.passwordLength,
                     ),
                 ],
             ],
@@ -112,19 +112,19 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                 next: (response: TF_RequestResponseUserLogin) => {
                     this.setItemUseCase.execute(
                         KEY_USER_NAME_LOCAL_STORAGE,
-                        this.loginForm?.get('userName')?.value
+                        this.loginForm?.get('userName')?.value,
                     );
                     this.setItemUseCase.execute(
                         KEY_USER_TOKEN_LOCAL_STORAGE,
-                        response.token
+                        response.token,
                     );
                     this.setItemUseCase.execute(
                         KEY_USER_ACCOUNT_ID,
-                        response.userAccountId
+                        response.userAccountId,
                     );
                     this.setItemUseCase.execute(
                         KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
-                        response.lastLogin.toString()
+                        response.lastLogin.toString(),
                     );
 
                     this.showSuccessMessageUseCase.execute({

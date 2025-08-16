@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 export const isFieldInvalid = (
     form: FormGroup | null,
     fieldName: string,
-    isFormSubmitted: boolean
+    isFormSubmitted: boolean,
 ): boolean => {
     if (form) {
         const fieldControl = form.get(fieldName);

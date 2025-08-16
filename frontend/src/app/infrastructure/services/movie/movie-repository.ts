@@ -22,11 +22,11 @@ export class INFREP_Movie implements TF_MovieRepository {
     constructor(private http: HttpClient) {}
 
     public createMovie = (
-        movie: TF_Movie
+        movie: TF_Movie,
     ): Observable<TF_MediaReturnMessageForObjectCreation> => {
         const requestData: TF_RequestInformation = getRequestInformation(
             'MOVIE-NEW',
-            true
+            true,
         );
 
         if (!requestData) return EMPTY;
@@ -37,18 +37,18 @@ export class INFREP_Movie implements TF_MovieRepository {
             .post<TF_MediaReturnMessageForObjectCreation>(
                 requestData.apiUrl,
                 { movie },
-                { headers: requestData.httpHeader }
+                { headers: requestData.httpHeader },
             )
             .pipe(shareReplay({ bufferSize: 1, refCount: true }));
         return this.createMovie$;
     };
 
     public updateMovie = (
-        movie: TF_Movie
+        movie: TF_Movie,
     ): Observable<TF_MediaReturnMessage> => {
         const requestData: TF_RequestInformation = getRequestInformation(
             'MOVIE-UPDATE',
-            true
+            true,
         );
 
         if (!requestData) return EMPTY;
@@ -66,7 +66,7 @@ export class INFREP_Movie implements TF_MovieRepository {
     deleteMovie = (movie: TF_Movie): Observable<TF_MediaReturnMessage> => {
         const requestData: TF_RequestInformation = getRequestInformation(
             'MOVIE-DELETE',
-            true
+            true,
         );
 
         if (!requestData) return EMPTY;

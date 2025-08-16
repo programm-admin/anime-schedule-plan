@@ -10,7 +10,7 @@ import { TF_UserFull } from '../../models/user.model';
 export class UC_User_GetUserSubject {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (): Observable<TF_UserFull> => {

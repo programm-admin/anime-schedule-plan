@@ -11,5 +11,5 @@ export type TF_MessageRepository = {
 };
 
 export const IT_MESSAGE_REPOSITORY = new InjectionToken<TF_MessageRepository>(
-    'TF_MessageRepository'
+    'TF_MessageRepository',
 );

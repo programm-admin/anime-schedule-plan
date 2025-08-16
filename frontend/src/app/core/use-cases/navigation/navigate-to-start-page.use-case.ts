@@ -8,7 +8,7 @@ import {
 export class UC_Navigation_NavigateToStartPage {
     constructor(
         @Inject(IT_NAVIGATION_REPOSITORY)
-        private readonly navigationRepository: TF_NavigationRepository
+        private readonly navigationRepository: TF_NavigationRepository,
     ) {}
 
     public execute = () => {

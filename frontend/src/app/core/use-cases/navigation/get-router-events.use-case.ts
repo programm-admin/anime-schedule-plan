@@ -10,7 +10,7 @@ import { Event } from '@angular/router';
 export class UC_Navigation_GetRouterEvents {
     constructor(
         @Inject(IT_NAVIGATION_REPOSITORY)
-        private readonly navigationRepository: TF_NavigationRepository
+        private readonly navigationRepository: TF_NavigationRepository,
     ) {}
 
     public execute = (): Observable<Event> => {

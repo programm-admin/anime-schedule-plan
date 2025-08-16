@@ -8,7 +8,7 @@ import {
 export class UC_LocalStorage_GetItem {
     constructor(
         @Inject(IT_LOCAL_STORAGE_REPOSITORY)
-        private readonly localStorageRepository: TF_LocalStorageRepository
+        private readonly localStorageRepository: TF_LocalStorageRepository,
     ) {}
 
     public execute = (fieldName: string): string | null => {
