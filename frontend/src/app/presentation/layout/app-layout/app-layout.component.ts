@@ -22,7 +22,7 @@ export class AppLayoutComponent extends COMPBase implements OnInit {
 
     constructor(
         private readonly getRouterEventsUseCase: UC_Navigation_GetRouterEvents,
-        private readonly navigateToStartPageUseCase: UC_Navigation_NavigateToStartPage
+        private readonly navigateToStartPageUseCase: UC_Navigation_NavigateToStartPage,
     ) {
         super();
     }
@@ -32,7 +32,7 @@ export class AppLayoutComponent extends COMPBase implements OnInit {
             .execute()
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                takeUntil(this.destroy$)
+                takeUntil(this.destroy$),
             )
             .subscribe((event: NavigationEnd) => {
                 this.isUrlForBigPicture =

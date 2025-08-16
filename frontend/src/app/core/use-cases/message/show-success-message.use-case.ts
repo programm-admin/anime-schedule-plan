@@ -9,7 +9,7 @@ import { TF_MessageInput } from '../../../shared/types/message-input.type';
 export class UC_Message_ShowSuccessMessage {
     constructor(
         @Inject(IT_MESSAGE_REPOSITORY)
-        private readonly messageRepository: TF_MessageRepository
+        private readonly messageRepository: TF_MessageRepository,
     ) {}
 
     public execute = (data: TF_MessageInput) => {

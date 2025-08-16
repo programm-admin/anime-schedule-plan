@@ -37,7 +37,7 @@ export class COMPCreateMoviePage extends COMPBase implements OnInit {
         private readonly createMovieUseCase: UC_Movie_CreateMovie,
         private readonly navigateToStartPageUseCase: UC_Navigation_NavigateToStartPage,
         private readonly navigateToPageUseCase: UC_Navigation_NavigateToPage,
-        private readonly logoutUserUseCase: UC_User_LogoutUser
+        private readonly logoutUserUseCase: UC_User_LogoutUser,
     ) {
         super();
     }
@@ -68,7 +68,7 @@ export class COMPCreateMoviePage extends COMPBase implements OnInit {
                     });
                     this.isLoading = false;
                     this.navigateToPageUseCase.execute(
-                        `${APP_ROUTES['MOVIE'].url}/${response.id}`
+                        `${APP_ROUTES['MOVIE'].url}/${response.id}`,
                     );
                 },
                 error: (err) => {

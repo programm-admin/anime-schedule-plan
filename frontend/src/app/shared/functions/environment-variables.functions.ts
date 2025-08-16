@@ -23,7 +23,7 @@ export const getAPIKey = (): string | undefined => {
 };
 
 export const getAPIRoute = (
-    routeString: TF_ApiUserRouteInput
+    routeString: TF_ApiUserRouteInput,
 ): string | null => {
     if (!ENVIRONMENT_VARIABLES.API_URL.trim()) return null;
 
@@ -42,7 +42,7 @@ export const getAPIRoute = (
 
 export const getHTTPHeader = (
     token: string,
-    withToken: boolean
+    withToken: boolean,
 ): HttpHeaders => {
     const headers = new HttpHeaders(
         withToken
@@ -52,7 +52,7 @@ export const getHTTPHeader = (
               }
             : {
                   'Content-Type': 'application/json',
-              }
+              },
     );
 
     return headers;
@@ -60,15 +60,15 @@ export const getHTTPHeader = (
 
 export const getUser = (): TF_UserFull => {
     const userName: string | null = localStorage.getItem(
-        KEY_USER_NAME_LOCAL_STORAGE
+        KEY_USER_NAME_LOCAL_STORAGE,
     );
     const userToken: string | null = localStorage.getItem(
-        KEY_USER_TOKEN_LOCAL_STORAGE
+        KEY_USER_TOKEN_LOCAL_STORAGE,
     );
     const userAccountId: string | null =
         localStorage.getItem(KEY_USER_ACCOUNT_ID);
     const userLastLogin: string | null = localStorage.getItem(
-        KEY_USER_LAST_LOGIN_LOCAL_STORAGE
+        KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     );
 
     if (
@@ -100,7 +100,7 @@ export const getUser = (): TF_UserFull => {
 
 export const getRequestInformation = (
     url: TF_ApiUserRouteInput,
-    withAuthorization: boolean
+    withAuthorization: boolean,
 ): TF_RequestInformation => {
     if (withAuthorization) {
         const currentUser: TF_UserFull = getUser();

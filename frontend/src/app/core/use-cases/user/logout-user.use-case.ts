@@ -8,7 +8,7 @@ import {
 export class UC_User_LogoutUser {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (): boolean => {

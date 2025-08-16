@@ -34,7 +34,7 @@ export class INFREP_User implements TF_UserRepository {
 
     constructor(
         @Inject(PLATFORM_ID) private readonly platformId: object,
-        private http: HttpClient
+        private http: HttpClient,
     ) {
         this.userSubject = new BehaviorSubject<TF_UserFull>({
             user: null,
@@ -49,7 +49,7 @@ export class INFREP_User implements TF_UserRepository {
 
     private getRequestInformation = (
         url: TF_ApiUserRouteInput,
-        withAuthorization: boolean
+        withAuthorization: boolean,
     ): TF_RequestInformation => {
         if (withAuthorization) {
             const currentUser: TF_UserFull = this.getUser();
@@ -73,11 +73,11 @@ export class INFREP_User implements TF_UserRepository {
     };
 
     public registerUser = (
-        registerData: TF_RegisterUser
+        registerData: TF_RegisterUser,
     ): Observable<TF_RequestResponseMessage> => {
         const requestData: TF_RequestInformation = this.getRequestInformation(
             'USER-REGISTER',
-            false
+            false,
         );
 
         if (!requestData) return EMPTY;
@@ -89,16 +89,16 @@ export class INFREP_User implements TF_UserRepository {
             .pipe(
                 tap(() => {
                     this.logoutUser();
-                })
+                }),
             );
     };
 
     public loginUser = (
-        loginData: TF_LoginUser
+        loginData: TF_LoginUser,
     ): Observable<TF_RequestResponseUserLogin> => {
         const requestData: TF_RequestInformation = this.getRequestInformation(
             'USER-LOGIN',
-            false
+            false,
         );
 
         if (!requestData) return EMPTY;
@@ -108,7 +108,7 @@ export class INFREP_User implements TF_UserRepository {
             loginData,
             {
                 headers: requestData.httpHeader,
-            }
+            },
         );
     };
 
@@ -126,11 +126,11 @@ export class INFREP_User implements TF_UserRepository {
     };
 
     public deleteUser = (
-        deleteData: TF_RegisterUser
+        deleteData: TF_RegisterUser,
     ): Observable<TF_RequestResponseMessage> => {
         const requestData: TF_RequestInformation = this.getRequestInformation(
             'USER-DELETE',
-            true
+            true,
         );
 
         if (!requestData) return EMPTY;
@@ -143,7 +143,7 @@ export class INFREP_User implements TF_UserRepository {
             .pipe(
                 tap(() => {
                     this.logoutUser();
-                })
+                }),
             );
     };
 
@@ -152,23 +152,23 @@ export class INFREP_User implements TF_UserRepository {
             map(
                 (currentUser: TF_UserFull) =>
                     currentUser.user !== null &&
-                    currentUser.status === 'finished'
-            )
+                    currentUser.status === 'finished',
+            ),
         );
     };
 
     public getUser = (): TF_UserFull => {
         if (isPlatformBrowser(this.platformId)) {
             const userName: string | null = localStorage.getItem(
-                KEY_USER_NAME_LOCAL_STORAGE
+                KEY_USER_NAME_LOCAL_STORAGE,
             );
             const userToken: string | null = localStorage.getItem(
-                KEY_USER_TOKEN_LOCAL_STORAGE
+                KEY_USER_TOKEN_LOCAL_STORAGE,
             );
             const userAccountId: string | null =
                 localStorage.getItem(KEY_USER_ACCOUNT_ID);
             const userLastLogin: string | null = localStorage.getItem(
-                KEY_USER_LAST_LOGIN_LOCAL_STORAGE
+                KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
             );
 
             if (

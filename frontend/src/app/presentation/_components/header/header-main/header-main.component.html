@@ -4,14 +4,14 @@
         <button class="headerButton headerButtonLeft">Meine Pläne</button>
 
         @if (!isUserLoading && isUserLoggedIn) {
-        <p-menu #creationMenu [model]="createMenuItems" [popup]="true" />
-        <button
-            class="headerButton headerButtonLeft"
-            pTooltip="Erstellen"
-            (click)="creationMenu.toggle($event)"
-        >
-            <span class="pi pi-plus"></span>
-        </button>
+            <p-menu #creationMenu [model]="createMenuItems" [popup]="true" />
+            <button
+                class="headerButton headerButtonLeft"
+                pTooltip="Erstellen"
+                (click)="creationMenu.toggle($event)"
+            >
+                <span class="pi pi-plus"></span>
+            </button>
         }
 
         <span class="headerButtonDivider"></span>
@@ -19,25 +19,26 @@
     <p-menu #menu [model]="menuItems" [popup]="true" />
 
     @if (!isUserLoading) {
-    <button
-        class="headerButton headerButtonRight"
-        [pTooltip]="
-            isUserLoggedIn ? 'Accounteinstellungen' : 'Einloggen/ Registrieren'
-        "
-        tooltipPosition="bottom"
-        (click)="menu.toggle($event)"
-    >
-        @if (isUserLoggedIn) {
-        <span class="pi pi-sign-out"></span>
-        } @else {
-        <span class="pi pi-user"></span>
-        }
-    </button>
-
+        <button
+            class="headerButton headerButtonRight"
+            [pTooltip]="
+                isUserLoggedIn
+                    ? 'Accounteinstellungen'
+                    : 'Einloggen/ Registrieren'
+            "
+            tooltipPosition="bottom"
+            (click)="menu.toggle($event)"
+        >
+            @if (isUserLoggedIn) {
+                <span class="pi pi-sign-out"></span>
+            } @else {
+                <span class="pi pi-user"></span>
+            }
+        </button>
     } @else {
-    <div class="spinnerDIV">
-        <p-progress-spinner ariaLabel="loading" class="progessSpinner" />
-        <p>Laden ...</p>
-    </div>
+        <div class="spinnerDIV">
+            <p-progress-spinner ariaLabel="loading" class="progessSpinner" />
+            <p>Laden ...</p>
+        </div>
     }
 </div>

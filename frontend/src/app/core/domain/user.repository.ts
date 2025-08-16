@@ -10,13 +10,13 @@ export type TF_UserRepository = {
     // TF = Type Frontend
     // functions
     registerUser: (
-        registerData: TF_RegisterUser
+        registerData: TF_RegisterUser,
     ) => Observable<TF_RequestResponseMessage>;
     loginUser: (
-        loginData: TF_LoginUser
+        loginData: TF_LoginUser,
     ) => Observable<TF_RequestResponseUserLogin>;
     deleteUser: (
-        deleteData: TF_RegisterUser
+        deleteData: TF_RegisterUser,
     ) => Observable<TF_RequestResponseMessage>;
     getIsUserLoggedIn: () => Observable<boolean>;
     getUser: () => TF_UserFull;
@@ -26,5 +26,5 @@ export type TF_UserRepository = {
 };
 
 export const IT_USER_REPOSITORY = new InjectionToken<TF_UserRepository>(
-    'T_UserRepository'
+    'T_UserRepository',
 );

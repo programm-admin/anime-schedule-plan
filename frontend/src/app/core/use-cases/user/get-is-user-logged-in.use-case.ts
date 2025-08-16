@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class UC_User_GetIsUserLoggedIn {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (): Observable<boolean> => {

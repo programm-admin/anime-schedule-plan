@@ -26,7 +26,7 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
 
     constructor(
         private readonly getUserSubjectUseCase: UC_User_GetUserSubject,
-        private readonly navigateToPageUseCase: UC_Navigation_NavigateToPage
+        private readonly navigateToPageUseCase: UC_Navigation_NavigateToPage,
     ) {
         super();
     }
@@ -63,7 +63,7 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
                     this.navigateToPage(
                         APP_ROUTES['MOVIE'].url +
                             '/' +
-                            APP_ROUTES['CREATE_MOVIE'].url
+                            APP_ROUTES['CREATE_MOVIE'].url,
                     ),
             },
             {

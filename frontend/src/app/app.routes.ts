@@ -23,7 +23,7 @@ export const routes: Routes = [
         path: APP_ROUTES['USER_START'].url,
         loadChildren: () =>
             import('./presentation/routes/user-routes/user-routes-module').then(
-                (UserRoutesModule) => UserRoutesModule.UserRoutesModule
+                (UserRoutesModule) => UserRoutesModule.UserRoutesModule,
             ),
         canActivate: [authGuard],
     },

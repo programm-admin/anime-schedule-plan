@@ -1,22 +1,24 @@
 <h1>Startseite</h1>
 
-@if (user.status === "finished") { @if (user.user) {
-<p class="textP">Hallo {{ user.user.userName }}</p>
-
+@if (user.status === "finished") {
+    @if (user.user) {
+        <p class="textP">Hallo {{ user.user.userName }}</p>
+    } @else {
+        <p class="textP">
+            Hallo und willkommen bei der Anime-Schedule-Plan (ASP)-App. Hier
+            kannst du deine Serien und Filme anlegen, managen und nachverfolgen.
+            Die App bietet dabei verschiedene Funktionen, z. B. das automatische
+            Setzen des Zustandes, ob alle Folgen einer Staffel oder Serie
+            bereits geschaut wurden. Zudem können hier die
+            Veröffentlichungsdaten der Episoden und Filme selbst eingetragen
+            werden sowie die Daten, wann diese tatsächlich geschaut wurden.
+            Dadurch ist immer sichtbar, welche Serien bzw. Filme wann geschaut
+            wurden und ob es innerhalb einer Serie bzw. Filmreihe noch
+            ungeschaute Serien bzw. Filme gibt. <br />
+            Viel Spaß mit der App.
+        </p>
+    }
 } @else {
-<p class="textP">
-    Hallo und willkommen bei der Anime-Schedule-Plan (ASP)-App. Hier kannst du
-    deine Serien und Filme anlegen, managen und nachverfolgen. Die App bietet
-    dabei verschiedene Funktionen, z. B. das automatische Setzen des Zustandes,
-    ob alle Folgen einer Staffel oder Serie bereits geschaut wurden. Zudem
-    können hier die Veröffentlichungsdaten der Episoden und Filme selbst
-    eingetragen werden sowie die Daten, wann diese tatsächlich geschaut wurden.
-    Dadurch ist immer sichtbar, welche Serien bzw. Filme wann geschaut wurden
-    und ob es innerhalb einer Serie bzw. Filmreihe noch ungeschaute Serien bzw.
-    Filme gibt. <br />
-    Viel Spaß mit der App.
-</p>
-} } @else {
-<p-progress-spinner ariaLabel="Laden ..." />
-<p>Laden ...</p>
+    <p-progress-spinner ariaLabel="Laden ..." />
+    <p>Laden ...</p>
 }

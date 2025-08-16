@@ -58,7 +58,7 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
         private readonly router: Router,
         private readonly registerUserUseCase: UC_User_RegisterUser,
         private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
-        private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage
+        private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage,
     ) {
         super();
     }
@@ -71,7 +71,7 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
                     [
                         Validators.required,
                         Validators.minLength(
-                            this.INPUT_VARIABLES_LOCAL.userNameLength
+                            this.INPUT_VARIABLES_LOCAL.userNameLength,
                         ),
                     ],
                 ],
@@ -80,7 +80,7 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
                     [
                         Validators.required,
                         Validators.minLength(
-                            this.INPUT_VARIABLES_LOCAL.passwordLength
+                            this.INPUT_VARIABLES_LOCAL.passwordLength,
                         ),
                     ],
                 ],
@@ -89,7 +89,7 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
                     [
                         Validators.required,
                         Validators.minLength(
-                            this.INPUT_VARIABLES_LOCAL.passwordLength
+                            this.INPUT_VARIABLES_LOCAL.passwordLength,
                         ),
                     ],
                 ],
@@ -99,14 +99,14 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
                     [
                         Validators.required,
                         Validators.minLength(
-                            this.INPUT_VARIABLES_LOCAL.answerLength
+                            this.INPUT_VARIABLES_LOCAL.answerLength,
                         ),
                     ],
                 ],
             },
             {
                 validators: passwordsMatchValidator,
-            }
+            },
         );
     }
 
@@ -114,7 +114,7 @@ export class COMPRegisterPage extends COMPBase implements OnInit {
         return isFieldInvalid(
             this.registerForm,
             fieldName,
-            this.isFormSubmitted
+            this.isFormSubmitted,
         );
     };
 

@@ -2,6 +2,8 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
+const prettier = require("eslint-plugin-prettier");
+const eslintConfigPrettier = require("eslint-config-prettier");
 
 module.exports = tseslint.config(
     {
@@ -11,31 +13,26 @@ module.exports = tseslint.config(
             ...tseslint.configs.recommended,
             ...tseslint.configs.stylistic,
             ...angular.configs.tsRecommended,
+            eslintConfigPrettier, // ersetzt "eslint-config-prettier"
         ],
+        plugins: {
+            prettier, // aktiviert eslint-plugin-prettier
+        },
         processor: angular.processInlineTemplates,
         rules: {
-            // Angular-spezifisch
+            "prettier/prettier": "error", // Prettier-Fehler als ESLint-Fehler
             "@angular-eslint/directive-selector": [
                 "error",
-                {
-                    type: "attribute",
-                    prefix: "app",
-                    style: "camelCase",
-                },
+                { type: "attribute", prefix: "app", style: "camelCase" },
             ],
             "@angular-eslint/component-selector": [
                 "error",
-                {
-                    type: "element",
-                    prefix: "app",
-                    style: "kebab-case",
-                },
+                { type: "element", prefix: "app", style: "kebab-case" },
             ],
-
-            // ⚡️ Deaktivierungen / Anpassungen
-            "@typescript-eslint/consistent-type-definitions": "off", // erlaubt `type`
-            "@typescript-eslint/no-inferrable-types": "off", // erlaubt `let x: string = 'abc'`
-            "@angular-eslint/prefer-inject": "off", // erlaubt Constructor Injection
+            "@typescript-eslint/consistent-type-definitions": "off",
+            "@typescript-eslint/no-inferrable-types": "off",
+            "@angular-eslint/prefer-inject": "off",
+            "@typescript-eslint/consistent-indexed-object-style": "off",
         },
     },
     {
@@ -45,5 +42,5 @@ module.exports = tseslint.config(
             ...angular.configs.templateAccessibility,
         ],
         rules: {},
-    }
+    },
 );

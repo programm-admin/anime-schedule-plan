@@ -11,11 +11,11 @@ import { TF_MediaReturnMessageForObjectCreation } from '../../../shared/types/me
 export class UC_Movie_CreateMovie {
     constructor(
         @Inject(IT_MOVIE_REPOSITORY)
-        private readonly movieRepository: TF_MovieRepository
+        private readonly movieRepository: TF_MovieRepository,
     ) {}
 
     public execute = (
-        movie: TF_Movie
+        movie: TF_Movie,
     ): Observable<TF_MediaReturnMessageForObjectCreation> => {
         return this.movieRepository.createMovie(movie);
     };

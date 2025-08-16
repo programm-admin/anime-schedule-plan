@@ -9,7 +9,7 @@ import { TF_UserFull } from '../../models/user.model';
 export class UC_User_GetUser {
     constructor(
         @Inject(IT_USER_REPOSITORY)
-        private readonly userRepository: TF_UserRepository
+        private readonly userRepository: TF_UserRepository,
     ) {}
 
     public execute = (): TF_UserFull => {
