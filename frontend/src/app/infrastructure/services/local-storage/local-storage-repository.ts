@@ -6,7 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
     providedIn: 'root',
 })
 export class INFREP_LocalStorage implements TF_LocalStorageRepository {
-    constructor(@Inject(PLATFORM_ID) private readonly platformId: Object) {}
+    constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {}
 
     public getItem = (fieldName: string): string | null => {
         if (isPlatformBrowser(this.platformId)) {

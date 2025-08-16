@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -23,8 +23,8 @@ import { COMPBase } from '../../_components/comp-base/comp-base';
 import { takeUntil } from 'rxjs';
 import { MessageModule } from 'primeng/message';
 import { APP_ROUTES } from '../../../shared/constants/app-routes';
-import { isPlatformBrowser } from '@angular/common';
 import {
+    KEY_USER_ACCOUNT_ID,
     KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     KEY_USER_NAME_LOCAL_STORAGE,
     KEY_USER_TOKEN_LOCAL_STORAGE,
@@ -47,7 +47,6 @@ import { UC_User_SetUserSubject } from '../../../core/use-cases/user/set-user-su
     providers: [
         UC_User_LoginUser,
         UC_Message_ShowSuccessMessage,
-        UC_Message_ShowErrorMessage,
         UC_LocalStorage_SetItem,
         UC_User_SetUserSubject,
     ],
@@ -65,8 +64,7 @@ export class COMPLoginPage extends COMPBase implements OnInit {
         private readonly showSuccessMessageUseCase: UC_Message_ShowSuccessMessage,
         private readonly setUserSubjectUseCase: UC_User_SetUserSubject,
         private readonly showErrorMessageUseCase: UC_Message_ShowErrorMessage,
-        private readonly setItemUseCase: UC_LocalStorage_SetItem,
-        @Inject(PLATFORM_ID) private readonly platformId: Object
+        private readonly setItemUseCase: UC_LocalStorage_SetItem
     ) {
         super();
     }
@@ -121,6 +119,10 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                         response.token
                     );
                     this.setItemUseCase.execute(
+                        KEY_USER_ACCOUNT_ID,
+                        response.userAccountId
+                    );
+                    this.setItemUseCase.execute(
                         KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
                         response.lastLogin.toString()
                     );
@@ -134,12 +136,13 @@ export class COMPLoginPage extends COMPBase implements OnInit {
                         userName: this.loginForm?.get('userName')?.value,
                         userToken: response.token,
                         userLastLogin: response.lastLogin,
+                        userAccountId: response.userAccountId,
                     });
 
                     this.isFormSubmitted = false;
                     this.router.navigateByUrl(APP_ROUTES['START'].url);
                 },
-                error: (err: any) => {
+                error: (err) => {
                     this.showErrorMessageUseCase.execute({
                         summary: 'Fehler beim Einloggen',
                         detail: err.error.message ?? JSON.stringify(err.error),

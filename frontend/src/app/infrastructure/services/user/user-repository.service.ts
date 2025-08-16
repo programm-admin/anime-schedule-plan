@@ -1,4 +1,4 @@
-import { computed, Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { TF_UserRepository } from '../../../core/domain/user.repository';
 import { BehaviorSubject, EMPTY, map, Observable, tap } from 'rxjs';
 import { TF_User, TF_UserFull } from '../../../core/models/user.model';
@@ -8,6 +8,7 @@ import { TF_RegisterUser } from '../../../shared/types/user/register-user.type';
 import { TF_RequestResponseUserLogin } from '../../../shared/types/user/response-user-login.type';
 import { isPlatformBrowser } from '@angular/common';
 import {
+    KEY_USER_ACCOUNT_ID,
     KEY_USER_LAST_LOGIN_LOCAL_STORAGE,
     KEY_USER_NAME_LOCAL_STORAGE,
     KEY_USER_TOKEN_LOCAL_STORAGE,
@@ -32,7 +33,7 @@ export class INFREP_User implements TF_UserRepository {
     private userSubject$!: Observable<TF_UserFull>;
 
     constructor(
-        @Inject(PLATFORM_ID) private readonly platformId: Object,
+        @Inject(PLATFORM_ID) private readonly platformId: object,
         private http: HttpClient
     ) {
         this.userSubject = new BehaviorSubject<TF_UserFull>({
@@ -116,6 +117,7 @@ export class INFREP_User implements TF_UserRepository {
 
         if (isPlatformBrowser(this.platformId)) {
             localStorage.clear();
+            this.userSubject.next({ user: null, status: 'finished' });
             return true;
         }
 
@@ -163,6 +165,8 @@ export class INFREP_User implements TF_UserRepository {
             const userToken: string | null = localStorage.getItem(
                 KEY_USER_TOKEN_LOCAL_STORAGE
             );
+            const userAccountId: string | null =
+                localStorage.getItem(KEY_USER_ACCOUNT_ID);
             const userLastLogin: string | null = localStorage.getItem(
                 KEY_USER_LAST_LOGIN_LOCAL_STORAGE
             );
@@ -170,9 +174,11 @@ export class INFREP_User implements TF_UserRepository {
             if (
                 !userName ||
                 !userToken ||
+                !userAccountId ||
                 !userLastLogin ||
                 (userName && !userName.trim()) ||
                 (userToken && !userToken.trim()) ||
+                (userAccountId && !userAccountId.trim()) ||
                 (userLastLogin && !userLastLogin.trim()) ||
                 (userLastLogin &&
                     userLastLogin.trim().length > 0 &&
@@ -185,6 +191,7 @@ export class INFREP_User implements TF_UserRepository {
                 user: {
                     userName,
                     userToken,
+                    userAccountId,
                     userLastLogin: new Date(userLastLogin),
                 },
                 status: 'finished',

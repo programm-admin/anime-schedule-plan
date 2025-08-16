@@ -1,0 +1,147 @@
+<div class="movieForm">
+    @if (movieForm) {
+    <div class="formWrapper">
+        <form
+            action="submit"
+            [formGroup]="movieForm"
+            (ngSubmit)="onSubmitForm()"
+        >
+            <div class="formItem">
+                <p-float-label variant="over">
+                    <input
+                        type="text"
+                        pInputText
+                        formControlName="title"
+                        autocomplete="off"
+                        [invalid]="checkFieldInvalid('title')"
+                        id="InpTitle"
+                    />
+                    <label for="InpTitle">Titel (Pflichtfeld)</label>
+                </p-float-label>
+                @if (checkFieldInvalid("title")) {
+                <p-message severity="error" variant="simple">
+                    Der Titel darf nicht leer sein.
+                </p-message>
+                }
+            </div>
+
+            <div class="formItem">
+                <p-float-label variant="over">
+                    <input
+                        type="text"
+                        pInputText
+                        formControlName="description"
+                        autocomplete="off"
+                        id="InpDescription"
+                    />
+                    <label for="InpDescription">Beschreibung (optional)</label>
+                </p-float-label>
+            </div>
+
+            <div class="formItem">
+                <p-float-label variant="over">
+                    <p-date-picker
+                        formControlName="plannedAirDate"
+                        inputId="InpPlannedAirDate"
+                        [showIcon]="true"
+                        [iconDisplay]="'input'"
+                        dateFormat="dd.mm.yy"
+                        [showButtonBar]="true"
+                        [showOnFocus]="false"
+                    />
+                    <label for="InpPlannedAirDate"
+                        >geplantes Ausstrahlungsdatum (Pflichtfeld)</label
+                    >
+                </p-float-label>
+                @if (checkFieldInvalid("plannedAirDate")) {
+                <p-message severity="error" variant="simple">
+                    Das geplante Ausstrahlungsdatum darf nicht leer sein.
+                </p-message>
+                }
+            </div>
+
+            <div class="formItem">
+                <p-float-label variant="over">
+                    <p-date-picker
+                        formControlName="realAirDate"
+                        inputId="InpRealAirDate"
+                        [showIcon]="true"
+                        [iconDisplay]="'input'"
+                        dateFormat="dd.mm.yy"
+                        [showButtonBar]="true"
+                        [showOnFocus]="false"
+                    />
+                    <label for="InpRealAirDate"
+                        >tatsächliches Ausstrahlungsdatum (Pflichtfeld)</label
+                    >
+                </p-float-label>
+                @if (checkFieldInvalid("realAirDate")) {
+                <p-message severity="error" variant="simple">
+                    Das tatsächliche Ausstrahlungsdatum darf nicht leer sein.
+                </p-message>
+                }
+            </div>
+
+            <div class="formItem">
+                <p-float-label variant="over">
+                    <p-select
+                        inputId="InpWatched"
+                        formControlName="watched"
+                        [options]="watchedSelection"
+                        optionLabel="name"
+                        optionValue="value"
+                    />
+                    <label for="InpWatched">geschaut (Pflichtfeld)?</label>
+                </p-float-label>
+                @if (checkFieldInvalid("watched")) {
+                <p-message severity="error" variant="simple">
+                    Es muss eine Option aus der Auswahl ausgewählt sein.
+                </p-message>
+                }
+            </div>
+
+            <div class="formItem">
+                <div class="rating">
+                    <label for="InpRating">Bewertung</label>
+                    <p-rating
+                        formControlName="rating"
+                        stars="10"
+                        id="InpRating"
+                    />
+
+                    @if (movieForm.get("rating")?.value) {
+                    <span>{{movieForm.get("rating")?.value}} / 10</span>
+                    }
+                </div>
+            </div>
+
+            <div class="formItem">
+                <p-float-label variant="over">
+                    <textarea
+                        pTextarea
+                        id="InpNotes"
+                        rows="4"
+                        style="resize: none"
+                        formControlName="notes"
+                    ></textarea>
+                    <label for="InpNotes">Notizen</label>
+                </p-float-label>
+            </div>
+
+            <p-button
+                type="submit"
+                label="Film anlegen"
+                icon="pi pi-check"
+                [disabled]="inpIsDisabled()"
+            />
+            <p-button
+                label="Abbrechen"
+                icon="pi pi-times"
+                severity="secondary"
+                [disabled]="inpIsDisabled()"
+                (onClick)="cancelForm()"
+            />
+        </form>
+    </div>
+    }
+</div>

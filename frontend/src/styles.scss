@@ -62,7 +62,9 @@ form button {
 .p-inputtext,
 p-password,
 .p-select-label,
-.p-select {
+.p-select,
+p-date-picker,
+textarea {
     width: 100%;
     background: transparent !important;
     color: var(--header--color) !important;
@@ -75,4 +77,15 @@ input {
 
 .formItem {
     margin-bottom: 3rem;
+}
+
+.textP {
+    text-align: justify;
+}
+
+.rating {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

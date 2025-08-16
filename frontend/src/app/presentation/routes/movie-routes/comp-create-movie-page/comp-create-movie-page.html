@@ -1,0 +1,13 @@
+<h1>Film anlegen</h1>
+
+<p class="textP">
+    Um einen Film anzulegen, bitte einfach untenstehendes Formular ausfüllen und
+    absenden.
+</p>
+
+<app-comp-movie-form
+    [inpMovieSeriesId]="''"
+    [inpIsDisabled]="isLoading"
+    (outSubmitForm)="submitForm($event)"
+    (outCancelForm)="cancelForm()"
+/>

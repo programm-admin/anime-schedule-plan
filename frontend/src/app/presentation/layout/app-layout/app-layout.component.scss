@@ -8,6 +8,7 @@
     width: 100%;
     height: 3.5rem;
     background-color: var(--header--background--color);
+    border-bottom: 0.2rem solid red;
 
     display: flex;
     justify-content: flex-start;
@@ -37,10 +38,21 @@
     overflow: hidden;
 }
 
-.backgroudIMG {
+.backgroundIMG {
     width: 100%;
-    height: 15rem;
     object-fit: cover;
     object-position: center;
     margin: 0;
+}
+
+.backgroudIMGTall {
+    height: 15rem;
+}
+
+.backgroudIMGSmall {
+    height: 6rem;
+}
+
+.logoSGV:hover {
+    cursor: pointer;
 }
