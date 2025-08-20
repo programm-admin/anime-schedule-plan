@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HeaderMainComponent } from '../../_components/header/header-main/header-main.component';
-import { NavigationEnd, RouterOutlet } from '@angular/router';
+import { NavigationEnd, RouterModule, RouterOutlet } from '@angular/router';
 import { filter, takeUntil } from 'rxjs';
 import { COMPBase } from '../../_components/comp-base/comp-base';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { UC_Navigation_NavigateToStartPage } from '../../../core/use-cases/navig
 
 @Component({
     selector: 'app-app-layout',
-    imports: [HeaderMainComponent, RouterOutlet, CommonModule],
+    imports: [HeaderMainComponent, RouterOutlet, CommonModule, RouterModule],
     templateUrl: './app-layout.component.html',
     styleUrl: './app-layout.component.scss',
     providers: [
