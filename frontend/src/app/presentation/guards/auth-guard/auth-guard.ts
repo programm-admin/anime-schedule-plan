@@ -17,13 +17,14 @@ export const authGuard: CanActivateFn = (route, state) => {
             if (
                 (currentUrl === `/${APP_ROUTES['USER_LOGIN'].url}` ||
                     currentUrl === `/${APP_ROUTES['USER_REGISTER'].url}`) &&
+                !isLoggedIn
+            ) {
+                return true;
+            } else if (
+                currentUrl.startsWith(`/${APP_ROUTES['MOVIE'].url}`) &&
                 isLoggedIn
             ) {
-                showErrorMessageUseCase.execute({
-                    summary: 'Kein Zugriff',
-                    detail: 'Sie haben keinen Zugriff auf diese Seite. Bitte loggen Sie sich ein, um Zugriff zu erhalten.',
-                });
-                return router.createUrlTree([APP_ROUTES['START'].url]);
+                return true;
             }
 
             showErrorMessageUseCase.execute({
