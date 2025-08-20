@@ -5,10 +5,11 @@ import { COMPBase } from '../../_components/comp-base/comp-base';
 import { takeUntil } from 'rxjs';
 import { DEFAULT_FULL_USER } from '../../../shared/constants/default-full-user';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-start-page.component',
-    imports: [ProgressSpinner],
+    imports: [ProgressSpinner, ButtonModule],
     templateUrl: './start-page.component.html',
     styleUrl: './start-page.component.scss',
     providers: [UC_User_GetUserSubject],

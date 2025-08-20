@@ -2,7 +2,13 @@
 
 @if (user.status === "finished") {
     @if (user.user) {
-        <p class="textP">Hallo {{ user.user.userName }}</p>
+        <p class="textP">
+            Hallo {{ user.user.userName }}, <br />
+            herzlich willkommen zurück. Im Folgenden kannst du zu deinen
+            wichtigsten Seiten springen.
+        </p>
+        <p-button label="zu meinen Filmen" icon="pi pi-paperclip" /> <br />
+        <p-button label="zu meinen Serien" icon="pi pi-paperclip" />
     } @else {
         <p class="textP">
             Hallo und willkommen bei der Anime-Schedule-Plan (ASP)-App. Hier
