@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Event } from '@angular/router';
+import { Event, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 
 export type TF_NavigationRepository = {

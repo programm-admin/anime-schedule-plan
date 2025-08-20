@@ -183,3 +183,40 @@ export const deleteMovie = async (request: Request, response: Response) => {
             .json(getReturnMessage("Fehler beim Löschen des Films", true));
     }
 };
+
+export const getMovieById = async (request: Request, response: Response) => {
+    const {
+        movieId,
+        movieTitle,
+        userAccountId,
+    }: { movieId: string; movieTitle: string; userAccountId: string } =
+        request.body;
+
+    try {
+        const foundMovies: T_DBMovie[] = await MovieModel.find({
+            id: movieId,
+            userAccountId,
+            title: movieTitle,
+        });
+
+        if (foundMovies.length < 1) {
+            console.error("movie not found");
+            response
+                .status(400)
+                .json(getReturnMessage("Film nicht gefunden", true));
+            return;
+        }
+
+        response.status(200).json({ movie: foundMovies[0] });
+    } catch (error) {
+        console.error("error when getting movie:", error);
+        response
+            .status(500)
+            .json(
+                getReturnMessage(
+                    "Fehler beim Laden des Films. Bitte versuchen Sie es erneut.",
+                    true
+                )
+            );
+    }
+};

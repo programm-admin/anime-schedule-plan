@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { TF_NavigationRepository } from '../../../core/domain/navigation.repository';
-import { Event, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Event, ParamMap, Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class INFREP_Navigation implements TF_NavigationRepository {
-    constructor(private router: Router) {}
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+    ) {}
 
     public navigateToStartPage = () => {
         this.router.navigateByUrl('');
