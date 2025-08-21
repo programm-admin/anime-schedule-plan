@@ -1,24 +1,31 @@
 <div class="headerMain">
-    <div class="leftSideDIV">
-        <button class="headerButton headerButtonLeft">Suche</button>
-        <button class="headerButton headerButtonLeft">Meine Pläne</button>
-
-        @if (!isUserLoading && isUserLoggedIn) {
-            <p-menu #creationMenu [model]="createMenuItems" [popup]="true" />
-            <button
-                class="headerButton headerButtonLeft"
-                pTooltip="Erstellen"
-                (click)="creationMenu.toggle($event)"
-            >
-                <span class="pi pi-plus"></span>
-            </button>
-        }
-
-        <span class="headerButtonDivider"></span>
-    </div>
-    <p-menu #menu [model]="menuItems" [popup]="true" />
-
     @if (!isUserLoading) {
+        <div class="leftSideDIV">
+            <button class="headerButton headerButtonLeft">Suche</button>
+            <button class="headerButton headerButtonLeft">Meine Pläne</button>
+
+            @if (isUserLoggedIn) {
+                <p-menu
+                    #creationMenu
+                    [model]="createMenuItems"
+                    [popup]="true"
+                />
+                <button
+                    class="headerButton headerButtonLeft"
+                    pTooltip="Erstellen"
+                    (click)="creationMenu.toggle($event)"
+                >
+                    <span class="pi pi-plus"></span>
+                </button>
+            }
+
+            <span class="headerButtonDivider"></span>
+        </div>
+        <p-menu
+            #menu
+            [model]="isUserLoggedIn ? menuItemsLoggedIn : menuItems"
+            [popup]="true"
+        />
         <button
             class="headerButton headerButtonRight"
             [pTooltip]="
@@ -30,9 +37,9 @@
             (click)="menu.toggle($event)"
         >
             @if (isUserLoggedIn) {
-                <span class="pi pi-sign-out"></span>
-            } @else {
                 <span class="pi pi-user"></span>
+            } @else {
+                <span class="pi pi-sign-in"></span>
             }
         </button>
     } @else {

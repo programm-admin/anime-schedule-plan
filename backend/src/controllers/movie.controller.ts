@@ -187,16 +187,13 @@ export const deleteMovie = async (request: Request, response: Response) => {
 export const getMovieById = async (request: Request, response: Response) => {
     const {
         movieId,
-        movieTitle,
         userAccountId,
-    }: { movieId: string; movieTitle: string; userAccountId: string } =
-        request.body;
+    }: { movieId: string; userAccountId: string } = request.body;
 
     try {
         const foundMovies: T_DBMovie[] = await MovieModel.find({
             id: movieId,
             userAccountId,
-            title: movieTitle,
         });
 
         if (foundMovies.length < 1) {

@@ -10,23 +10,30 @@ import { takeUntil } from 'rxjs';
 import { COMPBase } from '../../comp-base/comp-base';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UC_Navigation_NavigateToPage } from '../../../../core/use-cases/navigation/navigate-to-page.use-case';
+import { UC_User_LogoutUser } from '../../../../core/use-cases/user/logout-user.use-case';
 
 @Component({
     selector: 'app-header-main',
     imports: [TooltipModule, Menu, CommonModule, ProgressSpinnerModule],
     templateUrl: './header-main.component.html',
     styleUrl: './header-main.component.scss',
-    providers: [UC_User_GetUserSubject, UC_Navigation_NavigateToPage],
+    providers: [
+        UC_User_GetUserSubject,
+        UC_Navigation_NavigateToPage,
+        UC_User_LogoutUser,
+    ],
 })
 export class HeaderMainComponent extends COMPBase implements OnInit {
     public isUserLoggedIn: boolean = false;
     public menuItems: MenuItem[] | undefined;
+    public menuItemsLoggedIn: MenuItem[] | undefined;
     public createMenuItems: MenuItem[] | undefined;
     public isUserLoading: boolean = false;
 
     constructor(
         private readonly getUserSubjectUseCase: UC_User_GetUserSubject,
         private readonly navigateToPageUseCase: UC_Navigation_NavigateToPage,
+        private readonly logoutUserUseCase: UC_User_LogoutUser,
     ) {
         super();
     }
@@ -56,6 +63,17 @@ export class HeaderMainComponent extends COMPBase implements OnInit {
                 icon: 'pi pi-sign-in',
             },
         ];
+        this.menuItemsLoggedIn = [
+            {
+                label: 'Logout',
+                command: () => {
+                    this.logoutUserUseCase.execute();
+                    this.navigateToPage(APP_ROUTES['START'].url);
+                },
+                icon: 'pi pi-sign-out',
+            },
+        ];
+
         this.createMenuItems = [
             {
                 label: APP_ROUTES['CREATE_MOVIE'].name,

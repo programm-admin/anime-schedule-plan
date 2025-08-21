@@ -7,6 +7,7 @@ export type TF_ApiUserRouteInput =
     | 'MOVIE-NEW'
     | 'MOVIE-UPDATE'
     | 'MOVIE-DELETE'
+    | 'MOVIE-GET_MOVIE'
     | 'TV-NEW'
     | 'TV-UPDATE'
     | 'TV_DELETE'

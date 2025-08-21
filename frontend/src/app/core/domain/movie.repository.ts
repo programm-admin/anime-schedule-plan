@@ -11,7 +11,8 @@ export type TF_MovieRepository = {
         movie: TF_Movie,
     ) => Observable<TF_MediaReturnMessageForObjectCreation>;
     updateMovie: (movie: TF_Movie) => Observable<TF_MediaReturnMessage>;
-    deleteMovie: (movei: TF_Movie) => Observable<TF_MediaReturnMessage>;
+    deleteMovie: (movie: TF_Movie) => Observable<TF_MediaReturnMessage>;
+    getMovie: (movieId: string) => Observable<TF_Movie>;
 };
 
 export const IT_MOVIE_REPOSITORY = new InjectionToken<TF_MovieRepository>(
